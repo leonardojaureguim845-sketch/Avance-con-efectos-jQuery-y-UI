@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeporZone | Canchas</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="navbar game-nav">
+ <a class="brand" href="#" id="homeBrand"><span class="brand-mark">DZ</span><span>DEPORZONE<small>ARENA DEPORTIVA</small></span></a>
+ <span class="status"><i></i> CANCHAS DISPONIBLES</span>
+ <button class="hamburger" id="menuButton" aria-label="Abrir menú">☰</button>
+ <nav class="menu-panel" id="menuPanel"><button data-menu="home">⌂ Inicio</button><button data-menu="sports">⚽ Deportes</button><button data-menu="booking">▣ Mi reserva</button></nav>
+</header>
+<main class="container game-container">
+<section id="homeView" class="view game-home">
+ <div class="lobby-scene">
+  <div class="scene-lights"></div><div class="scene-copy"><p class="eyebrow">DEPORZONE ARENA · LA PAZ</p><h1>ELIGE TU<br><em>PRÓXIMO PARTIDO</em></h1><p>La cancha te espera. Forma tu equipo y reserva tu horario.</p><span class="scene-chip">TEMPORADA DEPORTIVA <b>2026</b></span></div>
+  <div class="scene-player"><div class="player-aura"></div><div class="player-icon">🏆</div><div class="scene-ball">⚽</div><span>JUEGA A TU MANERA</span></div>
+  <div class="scene-side-label">01 <i> / ARENA</i></div>
+ </div>
+ <div class="sports-dock"><div class="dock-heading"><div><small>SELECCIONA TU MODO</small><h2>¿A qué jugamos hoy?</h2></div><span>ELIGE UN DEPORTE <b>→</b></span></div>
+  <div class="sport-grid game-sports">
+   <button class="sport-card game-card football-card" data-sport="futbol"><span class="sport-symbol">⚽</span><small>CAMPO / 01</small><b>FÚTBOL</b><em>ENTRAR A RESERVAS ↗</em></button>
+   <button class="sport-card game-card wally-card" data-sport="wally"><span class="sport-symbol">🏐</span><small>ARENA / 02</small><b>WALLY</b><em>ENTRAR A RESERVAS ↗</em></button>
+   <button class="sport-card game-card voley-card" data-sport="voley"><span class="sport-symbol">🏐</span><small>CANCHA / 03</small><b>VOLEIBOL</b><em>ENTRAR A RESERVAS ↗</em></button>
+  </div>
+ </div>
+</section>
+<section id="bookingView" class="view" hidden>
+ <button class="back-button lobby-back" id="backHome">← VOLVER AL LOBBY</button>
+ <div class="booking-top"><div><p class="eyebrow dark">DEPORZONE / RESERVAS</p><h1 id="bookingTitle">Futsal</h1><p class="muted" id="bookingSubtitle">Selecciona tu horario y prepara el partido.</p></div><div class="rate-pill">Bs. 40 <small>/ hora</small></div></div>
+ <div class="promo"><div><span class="promo-tag">⚡ BENEFICIO DE LA ARENA</span><h2>¡Reserva 2 horas y llévate un agua de 2 litros!</h2><p>Ideal para compartir después del partido. Selecciona 2 horas para destacar el regalo.</p><small>Promoción de ejemplo para el proyecto; confirmar su validez con el negocio.</small></div><div class="promo-clock"><small>OFERTA POR TIEMPO LIMITADO</small><strong id="timer">00:30</strong><span>AL ENTRAR A RESERVAS</span></div></div>
+ <div class="booking-grid"><section class="panel"><div class="section-heading"><div><p class="eyebrow dark">01 / HORARIOS</p><h2>Elige tu horario</h2></div><span class="hint">Verde: libre · Rojo: ocupado</span></div><div class="filter-bar"><button class="filter-button active" data-filter="all">Todos</button><button class="filter-button" data-filter="available">Disponibles</button><button class="filter-button" data-filter="occupied">Ocupados</button></div><div class="time-grid" id="timeGrid"></div><div class="accordion"><button id="accordionButton">DETALLES DEL SERVICIO <span>＋</span></button><div id="accordionContent"><p id="courtDetails">Horarios demostrativos. La disponibilidad no es real.</p></div></div></section>
+ <section class="panel calculator"><p class="eyebrow dark">02 / TU RESERVA</p><h2>Resumen</h2><label for="hours">Cantidad de horas</label><div class="hours-row"><input type="number" id="hours" min="1" max="8" value="1"><span>hora(s)</span><b>Bs. 40 / hora</b></div>
+ <div class="booking-form-fields" id="reservationForm">
+  <div class="field"><label for="customerName">Nombre completo *</label><input id="customerName" type="text" placeholder="Ej. Juan Pérez" required minlength="3" maxlength="80" autocomplete="name" aria-describedby="nameError"><small class="field-error" id="nameError"></small></div>
+  <div class="field"><label for="customerPhone">Número de celular *</label><input id="customerPhone" type="tel" placeholder="Ej. 70000000" required maxlength="17" autocomplete="tel" inputmode="tel" aria-describedby="phoneError"><small class="field-error" id="phoneError"></small></div>
+  <div class="field full"><label for="reservationDate">Fecha de reserva *</label><input id="reservationDate" type="date" required aria-describedby="dateError"><small class="field-error" id="dateError"></small></div>
+  <p class="form-caption">* Completa estos datos y selecciona un horario disponible para continuar.</p>
+ </div>
+ <div class="summary-lines"><div><span>Deporte / cancha</span><b id="summaryCourt">Fútbol / Futsal</b></div><div><span>Horario</span><b id="summaryTime">Sin seleccionar</b></div><div><span>Garantía</span><b class="guarantee">A confirmar</b></div></div><div class="promo-status" id="promoStatus">🎁 Reserva 2 horas para recibir un agua de 2 litros (promoción de ejemplo).</div><div class="total-row"><span>TOTAL ESTIMADO</span><strong>Bs. <b id="total">40</b></strong></div><button class="confirm-button" id="openModal">CONTINUAR CON RESERVA →</button><small class="note">Demostración académica: no procesa pagos ni guarda reservas reales.</small></section></div>
+</section>
 
+<section class="bitacora"><div class="bitacora-title"><div><p class="eyebrow dark">REGISTRO</p><h2>Actividad</h2></div><div class="log-tools"><input id="logSearch" placeholder="Buscar actividad..."><button id="clearLog" class="clear-button">Limpiar</button></div></div><ul id="activityLog"><li>Lobby iniciado. Selecciona un deporte.</li></ul></section>
+<footer><b>DEPORZONE ARENA</b><span>Proyecto académico • Diseño Web II</span></footer>
+</main>
+<div class="modal-overlay" id="modalOverlay"><div class="modal"><button class="modal-close" id="closeModal">×</button><p class="eyebrow">DEPORZONE / CONFIRMACIÓN</p><h2>Revisa tu reserva</h2><div class="modal-clock"><span>TIEMPO RESTANTE</span><strong id="modalTimer">00:30</strong></div><div class="modal-details"><div><span>Cliente</span><b id="modalCustomer">—</b></div><div><span>Celular</span><b id="modalPhone">—</b></div><div><span>Fecha</span><b id="modalDate">—</b></div><div><span>Cancha</span><b id="modalCourt">Futsal</b></div><div><span>Horario</span><b id="modalTime">Sin seleccionar</b></div><div><span>Horas</span><b id="modalHours">1</b></div><div><span>Total</span><b id="modalTotal">Bs. 40</b></div></div><div class="modal-actions"><button class="cancel-button" id="cancelReservation">Cancelar</button><button class="process-button" id="processReservation">CONFIRMAR</button></div></div></div><div class="toast" id="toast"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script><script src="script.js"></script>
+</body></html>
