@@ -3,7 +3,10 @@ $(document).ready(function(){
  var slots={futbol:[['18:00',1],['19:00',0],['20:00',1],['21:00',1],['22:00',0],['23:00',1]],wally:[['18:00',0],['19:00',1],['20:00',1],['21:00',0]],voley:[['18:00',1],['19:00',1],['20:00',0],['21:00',1]]};
  var sport='futbol',selectedTime='',seconds=1800,timer=null;
  function log(msg){var t=new Date().toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'});$('#activityLog').prepend($('<li>').text(msg+' · '+t));$('#activityLog li').slice(8).remove();}
- function showView(id){$('.view').hide();$('#'+id).fadeIn(180);}
+ function showView(id){
+   $('.view').attr('hidden',true).attr('aria-hidden','true').hide();
+   $('#'+id).removeAttr('hidden').attr('aria-hidden','false').fadeIn(180);
+ }
  function stopTimer(){clearInterval(timer);timer=null;}
  function showToast(msg){$('#toast').stop(true,true).text(msg).slideDown(180);setTimeout(function(){$('#toast').fadeOut(250);},3000);}
  function formatTime(value){var m=Math.floor(value/60),s=value%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
@@ -30,7 +33,53 @@ $(document).ready(function(){
  function closeModal(){$('#modalOverlay').fadeOut(150);}
  $('#openModal').click(function(){if(!validateAll()){var first=$('.is-invalid').first();if(first.length)first.trigger('focus');return;}var name=$.trim($('#customerName').val()),phone=$.trim($('#customerPhone').val()),date=$('#reservationDate').val(),h=Number($('#hours').val());$('#modalCustomer').text(name);$('#modalPhone').text(phone);$('#modalDate').text(date);$('#modalCourt').text(sports[sport].court);$('#modalTime').text(selectedTime);$('#modalHours').text(h);$('#modalTotal').text('Bs. '+(h*40));$('#modalTimer').text($('#timer').text());$('#modalOverlay').css('display','flex').hide().fadeIn(150);});
  $('#closeModal,#cancelReservation').click(closeModal);$('#processReservation').click(function(){if(!validateAll()){closeModal();return;}closeModal();stopTimer();log('Reserva demostrativa confirmada para '+selectedTime+' a nombre de '+$('#customerName').val()+'.');showToast('¡Solicitud de reserva registrada en esta demostración!');});$('#modalOverlay').click(function(e){if(e.target===this)closeModal();});
- $('#menuButton').click(function(){$('#menuPanel').toggleClass('menu-open');});$('#menuPanel').on('click','button',function(){var target=$(this).data('menu');$('#menuPanel').removeClass('menu-open');if(target==='home'||target==='sports'){$('#backHome').trigger('click');}else if(target==='booking'&&$('#bookingView').is(':hidden')){showToast('Selecciona un deporte para ver sus reservas.');}});$(document).on('click',function(e){if(!$(e.target).closest('.navbar').length){$('#menuPanel').removeClass('menu-open');}});
+ function navigateApp(target){
+   $('#menuPanel,#mobileMenu').removeClass('menu-open is-open');
+   $('#mobileMenuButton').attr('aria-expanded','false');
+   if(target==='home'||target==='sports'){
+     stopTimer();
+     showView('homeView');
+     
+   }else if(target==='booking'){
+     if($('#bookingView').is(':hidden')){showToast('Selecciona un deporte para ver sus reservas.');}
+     else {showView('bookingView');}
+   }else if(target==='activity'){
+     stopTimer();
+     showView('activityView');
+   }else if(target==='info'){
+     showToast('DeporZone Arena · Proyecto académico de Diseño Web II.');
+     showView('homeView');
+   }
+   $('[data-menu]').removeClass('active');
+   $('[data-menu="'+target+'"]').addClass('active');
+   $('[data-view]').removeClass('active');
+   $('[data-view="'+target+'"]').addClass('active');
+ }
+ $('#menuButton').click(function(){
+   var opened=$('#menuPanel').toggleClass('menu-open').hasClass('menu-open');
+   $(this).attr('aria-expanded',String(opened));
+ });
+ $('#menuPanel').on('click','button',function(){navigateApp($(this).data('menu'));});
+ $('[data-view]').on('click',function(){navigateApp($(this).data('view'));});
+ $('#mobileMenuButton').on('click',function(){
+   var opened=$('#mobileMenu').toggleClass('is-open').hasClass('is-open');
+   $(this).attr('aria-expanded',String(opened));
+ });
+ $('#mobileMenu').on('click','button',function(){navigateApp($(this).data('menu'));});
+ $('.dz-bottom-nav').on('click','button',function(){navigateApp($(this).data('menu'));});
+ $(document).on('click',function(e){
+   if(!$(e.target).closest('.navbar,.dz-mobile-header,.dz-mobile-menu').length){
+     $('#menuPanel,#mobileMenu').removeClass('menu-open is-open');
+     $('#menuButton,#mobileMenuButton').attr('aria-expanded','false');
+   }
+ });
  $('#logSearch').on('input',function(){var q=$(this).val().toLowerCase();$('#activityLog li').each(function(){$(this).toggle($(this).text().toLowerCase().indexOf(q)!==-1);});});$('#clearLog').click(function(){$('#activityLog').empty();log('Bitácora limpiada.');});
+
+ $('#mobileTheme').on('click',function(){
+   $('body').toggleClass('dz-night-mode');
+   $(this).text($('body').hasClass('dz-night-mode')?'☀':'◐');
+ });
+ $(document).on('keydown',function(e){if(e.key==='Escape'){$('#menuPanel,#mobileMenu').removeClass('menu-open is-open');$('#menuButton,#mobileMenuButton').attr('aria-expanded','false');$('#modalOverlay').fadeOut(120);}});
+
  showView('homeView');
 });
