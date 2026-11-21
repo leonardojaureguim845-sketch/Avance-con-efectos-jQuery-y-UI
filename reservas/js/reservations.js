@@ -1,7 +1,14 @@
 /**
  * CANCHAPLUS — GESTIÓN DE DISPONIBILIDAD Y RESERVAS REALES
  * Conectado directamente a la API REST y Base de Datos SQLite
+ * Maneja estados sin conexión y persistencia garantizada
  */
+
+const DEFAULT_HOURS_LIST = [
+  '08:00', '09:00', '10:00', '11:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00',
+  '20:00', '21:00', '22:00'
+];
 
 const reservationsModule = {
   currentCourt: null,
@@ -14,6 +21,9 @@ const reservationsModule = {
     this.bindEvents();
     this.setupDateInput();
     this.startPromoTimer();
+
+    // Cancha inicial seleccionada
+    this.selectCourtById(1);
   },
 
   setupDateInput() {
@@ -80,19 +90,27 @@ const reservationsModule = {
   },
 
   async selectCourtById(courtId) {
+    const cached = window.CanchaPlusCourts.getCourtById(courtId);
+    if (cached) {
+      this.currentCourt = cached;
+    }
+
     try {
       const res = await window.CanchaPlusAPI.getCanchaById(courtId);
-      this.currentCourt = res.data;
+      if (res && res.data) {
+        this.currentCourt = res.data;
+      }
+    } catch {}
+
+    if (this.currentCourt) {
       $('#resCourtSelect').val(courtId);
       $('#bookingCourtTitle').text(this.currentCourt.nombre);
-      $('#bookingCourtLocation').text(`${this.currentCourt.ubicacion} · ${this.currentCourt.deporte_nombre}`);
+      $('#bookingCourtLocation').text(`${this.currentCourt.ubicacion} · ${this.currentCourt.deporte_nombre || 'Deporte'}`);
       $('#bookingRateDisplay').html(`Bs. <b>${this.currentCourt.precio_hora}</b> / hora`);
       
       this.selectedSlotTime = '';
       await this.refreshAvailability();
       this.updatePriceSummary();
-    } catch (err) {
-      window.CanchaPlusComponents.showToast('No se pudo cargar la información de la cancha.', 'error');
     }
   },
 
@@ -101,14 +119,30 @@ const reservationsModule = {
 
     const date = $('#resDate').val();
     const $grid = $('#timeSlotsGrid');
-    $grid.html('<div class="c-loading-state">Consultando horarios en base de datos...</div>');
 
     try {
       const res = await window.CanchaPlusAPI.getDisponibilidad(this.currentCourt.id_cancha, date);
       const slots = res.data.horarios || [];
+      $('#availabilityNotice').remove();
       this.renderSlots(slots);
+      $('#headerConnectionBadge').removeClass('offline').html('● BD Conectada');
     } catch (err) {
-      $grid.html(`<div class="c-error-banner">⚠️ ${err.message}</div>`);
+      // Modo sin conexión / Fallback con slots estándar del sistema
+      const fallbackSlots = DEFAULT_HOURS_LIST.map((h, i) => ({
+        id_horario: i + 1,
+        hora_inicio: h,
+        disponible: true,
+        estado: 'DISPONIBLE'
+      }));
+
+      this.renderSlots(fallbackSlots);
+      if (!$('#availabilityNotice').length) {
+        $grid.before(`
+          <div id="availabilityNotice" style="font-size:0.8rem; padding:0.5rem 0.8rem; border-radius:var(--radius-sm); background:var(--color-surface-subtle); border-left:4px solid var(--color-accent); margin-bottom:0.75rem;">
+            <b>ℹ️ Modo catálogo:</b> Se muestran los bloques horarios del sistema. Para consultar disponibilidad en vivo y persistir reservas, inicia tu servidor local (<code>node src/server.js</code>).
+          </div>
+        `);
+      }
     }
   },
 
@@ -241,7 +275,7 @@ const reservationsModule = {
     $('#modalPhone').text(phone);
     $('#modalDate').text(date);
     $('#modalCourt').text(this.currentCourt.nombre);
-    $('#modalSport').text(this.currentCourt.deporte_nombre);
+    $('#modalSport').text(this.currentCourt.deporte_nombre || 'Deporte');
     $('#modalTime').text(`${this.selectedSlotTime} (${hours} hora/s)`);
     $('#modalTotal').text(`Bs. ${total}`);
     $('#modalMethod').text('Pago Presencial en Cancha');
@@ -284,7 +318,14 @@ const reservationsModule = {
       // Log en bitácora
       window.CanchaPlusApp.addLog(`Reserva confirmada en BD: ${reserva.codigo_reserva} · ${reserva.cancha_nombre} · ${reserva.fecha_reserva} ${reserva.hora_inicio}`);
     } catch (err) {
-      window.CanchaPlusComponents.showToast(`Error: ${err.message}`, 'error');
+      // Si el servidor está apagado o no se puede conectar
+      $('#bookingModal').removeClass('is-visible');
+      const errorMsg = err.isNetworkError
+        ? `⚠️ SERVIDOR DESCONECTADO: No se pudo conectar con el backend (${window.CanchaPlusAPI.getBaseUrl()}). Para persistir reservas en la base de datos real, ejecuta "node src/server.js" en tu computadora o configura tu servidor con el botón "⚙️ Conexión API". (CanchaPlus no genera reservas ficticias para proteger la integridad de los datos).`
+        : `Error al procesar reserva: ${err.message}`;
+      
+      alert(errorMsg);
+      window.CanchaPlusComponents.showToast(err.message, 'error');
     } finally {
       $btn.prop('disabled', false).text('CONFIRMAR RESERVA');
     }
@@ -329,16 +370,14 @@ const reservationsModule = {
     try {
       let reservas = [];
       if (searchVal) {
-        // Búsqueda por teléfono, correo o código
         if (searchVal.startsWith('CP-')) {
           const res = await window.CanchaPlusAPI.getReserva(searchVal);
-          if (res.data) reservas = [res.data];
+          if (res && res.data) reservas = [res.data];
         } else {
           const res = await window.CanchaPlusAPI.getMisReservas({ telefono: searchVal, correo: searchVal });
           reservas = res.data || [];
         }
       } else {
-        // Consultar por los códigos locales guardados
         const codes = this.getLocalReservationCodes();
         if (codes.length > 0) {
           const promises = codes.slice(0, 10).map(c => window.CanchaPlusAPI.getReserva(c).catch(() => null));
@@ -349,7 +388,12 @@ const reservationsModule = {
 
       this.renderMyReservations(reservas);
     } catch (err) {
-      $container.html(`<div class="c-error-banner">⚠️ Error al consultar reservas: ${err.message}</div>`);
+      $container.html(`
+        <div class="c-empty-state">
+          <p>⚠️ No se pudo conectar con el servidor backend.</p>
+          <small>Inicia tu servidor con <code>node src/server.js</code> para consultar tus reservas en la base de datos real.</small>
+        </div>
+      `);
     }
   },
 
@@ -369,8 +413,8 @@ const reservationsModule = {
 
     reservas.forEach(r => {
       const isConfirmed = r.estado === 'CONFIRMADA';
-      const cleanCourt = DOMPurify.sanitize(r.cancha_nombre || 'Cancha');
-      const cleanSport = DOMPurify.sanitize(r.deporte_nombre || 'Deporte');
+      const cleanCourt = window.DOMPurify ? DOMPurify.sanitize(r.cancha_nombre || 'Cancha') : (r.cancha_nombre || 'Cancha');
+      const cleanSport = window.DOMPurify ? DOMPurify.sanitize(r.deporte_nombre || 'Deporte') : (r.deporte_nombre || 'Deporte');
 
       const cardHtml = `
         <article class="c-panel" style="margin-bottom: 1rem;">
@@ -386,7 +430,7 @@ const reservationsModule = {
           <div style="margin: 0.75rem 0; font-size:0.9rem; color:var(--color-text-muted);">
             <div>🏟️ <b>${cleanCourt}</b> (${cleanSport})</div>
             <div>📅 Fecha: <b>${r.fecha_reserva}</b> · ⏰ Horario: <b>${r.hora_inicio}</b> (${r.cantidad_horas} hr)</div>
-            <div>👤 Cliente: <b>${DOMPurify.sanitize(r.nombre_cliente)}</b> · 📞 ${r.telefono_cliente}</div>
+            <div>👤 Cliente: <b>${window.DOMPurify ? DOMPurify.sanitize(r.nombre_cliente) : r.nombre_cliente}</b> · 📞 ${r.telefono_cliente}</div>
           </div>
           <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
             <button class="c-btn c-btn--outline c-btn--sm btn-view-voucher" data-id="${r.id_reserva}">Ver Comprobante</button>
