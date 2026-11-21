@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f291e"/>
+      <stop offset="50%" stop-color="#14422e"/>
+      <stop offset="100%" stop-color="#091b13"/>
+    </linearGradient>
+    <radialGradient id="floodlights" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.35"/>
+      <stop offset="40%" stop-color="#10b981" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="600" rx="24" fill="url(#heroGradient)"/>
+  <rect width="1200" height="600" rx="24" fill="url(#floodlights)"/>
+  <!-- Luces de estadio -->
+  <circle cx="150" cy="80" r="12" fill="#fef08a" opacity="0.8"/>
+  <circle cx="1050" cy="80" r="12" fill="#fef08a" opacity="0.8"/>
+  <!-- Campo geométrico estilizado de fondo -->
+  <path d="M 0 520 L 600 380 L 1200 520 L 1200 600 L 0 600 Z" fill="#166534" opacity="0.5"/>
+  <ellipse cx="600" cy="460" rx="300" ry="70" fill="none" stroke="#86efac" stroke-width="3" opacity="0.4"/>
+  <line x1="600" y1="380" x2="600" y2="600" stroke="#86efac" stroke-width="3" opacity="0.4"/>
+</svg>

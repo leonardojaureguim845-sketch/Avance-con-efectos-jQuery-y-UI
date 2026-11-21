@@ -1,0 +1,22 @@
+{
+  "name": "canchaplus-backend",
+  "version": "1.0.0",
+  "description": "Backend API REST y Base de Datos SQLite para CanchaPlus - Reservas Deportivas",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "init-db": "node seeds/init.js",
+    "test": "node --test tests/api.test.js"
+  },
+  "keywords": [
+    "canchaplus",
+    "reservas",
+    "sqlite",
+    "rest-api",
+    "sports-booking"
+  ],
+  "author": "CanchaPlus Engineering - UPDS",
+  "license": "ISC"
+}
