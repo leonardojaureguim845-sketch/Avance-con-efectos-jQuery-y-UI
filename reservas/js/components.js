@@ -11,6 +11,7 @@ const componentsModule = {
     this.bindAccordions();
     this.bindSimulador();
     this.bindApiConfig();
+    this.bindHydration();
   },
 
   showToast(message, type = 'info') {
@@ -86,6 +87,13 @@ const componentsModule = {
         $('#apiConfigModal').removeClass('is-visible');
         window.CanchaPlusCourts.init();
       }
+    });
+  },
+
+  bindHydration() {
+    $('#btnHydratePage').on('click', () => {
+      this.showToast('Hidratando la página...', 'info');
+      setTimeout(() => location.reload(), 300);
     });
   }
 };

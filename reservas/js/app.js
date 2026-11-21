@@ -8,6 +8,9 @@ const app = {
   activityStorageKey: 'canchaplus_activity_v2',
 
   init() {
+    window.addEventListener('error', (e) => {
+      console.error('Error global:', e.message);
+    });
     this.bindNavigation();
     this.restoreActivityLog();
     this.initPWA();
@@ -93,36 +96,54 @@ const app = {
   },
 
   navigate(viewId) {
+    if (!viewId || !$(`#view-${viewId}`).length) {
+      viewId = 'home';
+    }
     this.currentView = viewId;
 
-    // Cambiar vistas visibles
-    $('.c-view').removeClass('active').hide();
-    $(`#view-${viewId}`).addClass('active').fadeIn(180);
+    try {
+      // Cambiar vistas visibles
+      $('.c-view').removeClass('active').hide();
+      const $target = $(`#view-${viewId}`);
+      if (!$target.length) {
+        viewId = 'home';
+      }
+      $(`#view-${viewId}`).addClass('active').fadeIn(180);
 
-    // Actualizar estados activos en navegación
-    $('[data-view]').removeClass('active');
-    $(`[data-view="${viewId}"]`).addClass('active');
+      // Actualizar estados activos en navegación
+      $('[data-view]').removeClass('active');
+      $(`[data-view="${viewId}"]`).addClass('active');
 
-    // Cargas perezosas específicas de la vista
-    if (viewId === 'my-reservations') {
-      window.CanchaPlusReservations.loadMyReservations();
-    } else if (viewId === 'admin') {
-      this.loadAdminPanel();
+      // Cargas perezosas específicas de la vista
+      if (viewId === 'my-reservations') {
+        window.CanchaPlusReservations.loadMyReservations();
+      } else if (viewId === 'admin') {
+        this.loadAdminPanel();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.addLog(`Navegación: Vista ${viewId.toUpperCase()}`);
+    } catch (err) {
+      console.error('Error de navegación:', err);
+      $('.c-view').removeClass('active').hide();
+      $('#view-home').addClass('active').show();
+      this.addLog('Error de navegación: se restauró Inicio');
     }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.addLog(`Navegación: Vista ${viewId.toUpperCase()}`);
   },
 
   selectSport(sportCode) {
     this.navigate('courts');
     $('#filterSportSelect').val(sportCode);
-    window.CanchaPlusCourts.loadCourts(sportCode);
+    if (window.CanchaPlusCourts && typeof window.CanchaPlusCourts.loadCourts === 'function') {
+      window.CanchaPlusCourts.loadCourts(sportCode);
+    }
   },
 
   startBooking(courtId) {
     this.navigate('booking');
-    window.CanchaPlusReservations.selectCourtById(courtId);
+    if (window.CanchaPlusReservations && typeof window.CanchaPlusReservations.selectCourtById === 'function') {
+      window.CanchaPlusReservations.selectCourtById(courtId);
+    }
   },
 
   updateOnlineBadge() {
