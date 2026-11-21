@@ -49,7 +49,7 @@ const courtsModule = {
       }
     } catch (err) {
       console.info('Catálogo de deportes servido desde App Shell (Servidor backend desconectado):', err.message);
-      $('#headerConnectionBadge').addClass('offline').html('● Servidor Desconectado');
+      $('#headerConnectionBadge').addClass('offline').html('● Modo catálogo (configura tu backend)');
     }
   },
 
