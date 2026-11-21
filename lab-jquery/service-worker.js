@@ -3,7 +3,7 @@
  * Gestión de Caché de Recursos Estáticos y Funcionamiento Sin Conexión
  */
 
-const CACHE_NAME = 'canchaplus-shell-v3';
+const CACHE_NAME = 'canchaplus-shell-v4';
 
 const APP_SHELL = [
   './',
