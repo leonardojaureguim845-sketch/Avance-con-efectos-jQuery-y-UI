@@ -30,7 +30,7 @@ server.listen(config.port, '0.0.0.0', () => {
   console.log(`  📅 Disponibilidad:       http://localhost:${config.port}/api/disponibilidad?cancha_id=1&fecha=2026-11-21`);
   console.log('================================================================');
   console.log(`  👤 Admin por defecto:     ${config.adminUser.correo}`);
-  console.log('  🔑 Clave en .env.example: AdminCanchaPlus2026!');
+  console.log('  🔑 Clave admin: configurada en .env (ADMIN_PASSWORD).');
   console.log('================================================================');
 });
 

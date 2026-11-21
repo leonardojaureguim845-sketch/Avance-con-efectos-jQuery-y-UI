@@ -255,12 +255,12 @@ const app = {
             <tbody>
               ${reservas.map(r => `
                 <tr style="border-bottom:1px solid var(--color-border);">
-                  <td style="padding:0.5rem;"><b>${r.codigo_reserva}</b></td>
+                  <td style="padding:0.5rem;"><b>${DOMPurify.sanitize(String(r.codigo_reserva || ''))}</b></td>
                   <td style="padding:0.5rem;">${DOMPurify.sanitize(r.cancha_nombre)}</td>
-                  <td style="padding:0.5rem;">${r.fecha_reserva} ${r.hora_inicio} (${r.cantidad_horas}h)</td>
-                  <td style="padding:0.5rem;">${DOMPurify.sanitize(r.nombre_cliente)} (${r.telefono_cliente})</td>
-                  <td style="padding:0.5rem;">Bs. ${r.precio_total}</td>
-                  <td style="padding:0.5rem;"><span class="c-badge ${r.estado === 'CONFIRMADA' ? 'c-badge--success' : 'c-badge--danger'}">${r.estado}</span></td>
+                  <td style="padding:0.5rem;">${DOMPurify.sanitize(String(r.fecha_reserva || ''))} ${DOMPurify.sanitize(String(r.hora_inicio || ''))} (${Number(r.cantidad_horas) || 0}h)</td>
+                  <td style="padding:0.5rem;">${DOMPurify.sanitize(String(r.nombre_cliente || ''))} (${DOMPurify.sanitize(String(r.telefono_cliente || ''))})</td>
+                  <td style="padding:0.5rem;">Bs. ${Number(r.precio_total) || 0}</td>
+                  <td style="padding:0.5rem;"><span class="c-badge ${r.estado === 'CONFIRMADA' ? 'c-badge--success' : 'c-badge--danger'}">${DOMPurify.sanitize(String(r.estado || ''))}</span></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -284,7 +284,7 @@ const app = {
         `);
       }
     } catch (err) {
-      $adminReservas.html(`<p style="color:var(--color-danger);">${err.message}</p>`);
+      $adminReservas.html(`<p style="color:var(--color-danger);">${DOMPurify.sanitize(String(err.message || ''))}</p>`);
     }
   }
 };

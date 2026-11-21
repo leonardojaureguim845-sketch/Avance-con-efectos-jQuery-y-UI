@@ -131,7 +131,7 @@ reservas/
 
 ## ⚙️ Requisitos Previos
 
-- **Node.js**: Versión 18 o superior (probado y optimizado en Node.js v24 con `node:sqlite` nativo).
+- **Node.js**: Versión 22.3 o superior (requerido por `node:sqlite` nativo; probado en Node.js v24).
 - **Navegador Web Moderno**: Chrome, Brave, Edge, Opera o Firefox.
 
 ---

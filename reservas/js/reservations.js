@@ -163,10 +163,10 @@ const reservationsModule = {
       const $btn = $(`
         <button type="button" 
                 class="c-slot ${statusClass}" 
-                data-time="${slot.hora_inicio}" 
+                data-time="${DOMPurify.sanitize(String(slot.hora_inicio || ''))}" 
                 data-status="${isFree ? 'available' : 'occupied'}"
                 ${!isFree ? 'disabled' : ''}>
-          <span>${slot.hora_inicio}</span>
+          <span>${DOMPurify.sanitize(String(slot.hora_inicio || ''))}</span>
           <small>${labelText}</small>
         </button>
       `);
@@ -374,7 +374,9 @@ const reservationsModule = {
           const res = await window.CanchaPlusAPI.getReserva(searchVal);
           if (res && res.data) reservas = [res.data];
         } else {
-          const res = await window.CanchaPlusAPI.getMisReservas({ telefono: searchVal, correo: searchVal });
+          const res = searchVal.includes('@')
+             ? await window.CanchaPlusAPI.getMisReservas({ correo: searchVal })
+             : await window.CanchaPlusAPI.getMisReservas({ telefono: searchVal });
           reservas = res.data || [];
         }
       } else {
@@ -390,7 +392,7 @@ const reservationsModule = {
     } catch (err) {
       $container.html(`
         <div class="c-empty-state">
-          <p>⚠️ No se pudo conectar con el servidor backend.</p>
+          <p>⚠️ Error al consultar reservas.</p>
           <small>Inicia tu servidor con <code>node src/server.js</code> para consultar tus reservas en la base de datos real.</small>
         </div>
       `);
@@ -420,17 +422,17 @@ const reservationsModule = {
         <article class="c-panel" style="margin-bottom: 1rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
             <div>
-              <span class="c-badge ${isConfirmed ? 'c-badge--success' : 'c-badge--danger'}">${r.estado}</span>
-              <b style="font-size:1.1rem; margin-left:0.5rem;">${r.codigo_reserva}</b>
+              <span class="c-badge ${isConfirmed ? 'c-badge--success' : 'c-badge--danger'}">${DOMPurify.sanitize(String(r.estado || ''))}</span>
+              <b style="font-size:1.1rem; margin-left:0.5rem;">${DOMPurify.sanitize(String(r.codigo_reserva || ''))}</b>
             </div>
             <div style="font-weight:700; color:var(--color-brand-primary); font-size:1.15rem;">
-              Bs. ${r.precio_total}
+              Bs. ${Number(r.precio_total) || 0}
             </div>
           </div>
           <div style="margin: 0.75rem 0; font-size:0.9rem; color:var(--color-text-muted);">
             <div>🏟️ <b>${cleanCourt}</b> (${cleanSport})</div>
-            <div>📅 Fecha: <b>${r.fecha_reserva}</b> · ⏰ Horario: <b>${r.hora_inicio}</b> (${r.cantidad_horas} hr)</div>
-            <div>👤 Cliente: <b>${window.DOMPurify ? DOMPurify.sanitize(r.nombre_cliente) : r.nombre_cliente}</b> · 📞 ${r.telefono_cliente}</div>
+            <div>📅 Fecha: <b>${DOMPurify.sanitize(String(r.fecha_reserva || ''))}</b> · ⏰ Horario: <b>${DOMPurify.sanitize(String(r.hora_inicio || ''))}</b> (${Number(r.cantidad_horas) || 0} hr)</div>
+            <div>👤 Cliente: <b>${window.DOMPurify ? DOMPurify.sanitize(r.nombre_cliente) : r.nombre_cliente}</b> · 📞 ${DOMPurify.sanitize(String(r.telefono_cliente || ''))}</div>
           </div>
           <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
             <button class="c-btn c-btn--outline c-btn--sm btn-view-voucher" data-id="${r.id_reserva}">Ver Comprobante</button>
