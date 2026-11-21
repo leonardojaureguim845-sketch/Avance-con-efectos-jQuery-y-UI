@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#14532d" />
+  <meta name="description" content="CanchaPlus — Plataforma oficial de reservas deportivas en La Paz, Bolivia. Reserva canchas de fútbol, wally y voleibol en tiempo real." />
+  
+  <title>CanchaPlus — Reservas Deportivas</title>
+  
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  
+  <!-- Hojas de Estilos Modulares y Responsivas -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/accessibility.css" />
+</head>
+<body>
+  <!-- Salto accesible para lectores de pantalla y teclado -->
+  <a href="#mainContent" class="c-skip-link">Saltar al contenido principal</a>
+
+  <!-- Header / Barra de Navegación Principal -->
+  <header class="c-header" role="banner">
+    <div class="c-header__topline">
+      <div class="c-header__topline-left">
+        <b>CANCHAPLUS · RESERVAS DEPORTIVAS</b>
+        <span id="headerConnectionBadge" class="c-header__badge-status" role="status" aria-live="polite">● En línea</span>
+      </div>
+      <div class="c-header__topline-right">
+        <button type="button" id="btnConfigApi" class="c-btn c-btn--outline c-btn--sm" style="color:#ffffff; border-color:rgba(255,255,255,0.3); font-size:0.7rem; padding:0.15rem 0.5rem;" title="Configurar URL del Backend">
+          ⚙️ Conexión API
+        </button>
+        <span style="margin-left:0.5rem; opacity:0.8;">La Paz · Bolivia</span>
+      </div>
+    </div>
+
+    <div class="c-header__navbar">
+      <a href="#home" class="c-brand" data-view="home" aria-label="Ir al inicio de CanchaPlus">
+        <div class="c-brand__mark">CP</div>
+        <div class="c-brand__text">
+          <span class="c-brand__title">CanchaPlus</span>
+          <span class="c-brand__subtitle">Tu espacio deportivo</span>
+        </div>
+      </a>
+
+      <!-- Navegación de Escritorio -->
+      <nav class="c-nav-desktop" aria-label="Navegación principal de escritorio">
+        <a href="#home" class="c-nav-link active" data-view="home">Inicio</a>
+        <a href="#sports" class="c-nav-link" data-view="sports">Deportes</a>
+        <a href="#courts" class="c-nav-link" data-view="courts">Canchas</a>
+        <a href="#booking" class="c-nav-link" data-view="booking">Reservar</a>
+        <a href="#my-reservations" class="c-nav-link" data-view="my-reservations">Mis Reservas</a>
+        <a href="#activity" class="c-nav-link" data-view="activity">Actividad</a>
+        <a href="#admin" class="c-nav-link admin-only-link" data-view="admin" style="display:none;">Admin</a>
+      </nav>
+
+      <!-- Botones de Utilidad (Tema, Alto Contraste, Auth, Menú Móvil) -->
+      <div class="c-header__actions">
+        <button type="button" id="btnToggleTheme" class="c-icon-btn" aria-label="Cambiar a modo oscuro" aria-pressed="false" title="Modo Claro/Oscuro">
+          🌙
+        </button>
+        <button type="button" id="btnToggleContrast" class="c-icon-btn" aria-label="Modo de alto contraste" aria-pressed="false" title="Alto Contraste A11y">
+          👁️
+        </button>
+        <button type="button" id="navAuthBtn" class="c-btn c-btn--outline c-btn--sm" aria-label="Iniciar sesión o gestionar cuenta">
+          <span>🔑</span> Ingresar
+        </button>
+        <button type="button" id="btnToggleMobileMenu" class="c-icon-btn c-menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobileDrawer">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú Desplegable Móvil -->
+    <nav id="mobileDrawer" class="c-mobile-drawer" aria-label="Navegación desplegable móvil">
+      <a href="#home" class="c-nav-link active" data-view="home">⌂ Inicio</a>
+      <a href="#sports" class="c-nav-link" data-view="sports">⚽ Deportes</a>
+      <a href="#courts" class="c-nav-link" data-view="courts">🏟️ Catálogo de Canchas</a>
+      <a href="#booking" class="c-nav-link" data-view="booking">📅 Reservar Horario</a>
+      <a href="#my-reservations" class="c-nav-link" data-view="my-reservations">📋 Mis Reservas</a>
+      <a href="#activity" class="c-nav-link" data-view="activity">⏱️ Actividad y Smoke Test</a>
+      <a href="#admin" class="c-nav-link admin-only-link" data-view="admin" style="display:none;">🔒 Panel Administrador</a>
+    </nav>
+  </header>
+
+  <!-- Contenido Principal Dinámico -->
+  <main id="mainContent" class="c-app-container">
+
+    <!-- ====================================================================
+         VISTA 1: INICIO / LOBBY (view-home)
+         ==================================================================== -->
+    <section id="view-home" class="c-view active" aria-labelledby="homeTitle">
+      <div class="c-hero">
+        <div class="c-hero__glow"></div>
+        <div class="c-hero__badge">CANCHAPLUS ARENA · LA PAZ · BOLIVIA</div>
+        <h1 id="homeTitle" class="c-hero__title">ELIGE TU<br /><em>PRÓXIMO PARTIDO</em></h1>
+        <p class="c-hero__description">
+          La cancha te espera. Conéctate a disponibilidad en tiempo real, reserva tu cancha favorita de fútbol, wally o voleibol y recibe confirmación instantánea.
+        </p>
+        <div class="c-hero__actions">
+          <button type="button" class="c-btn c-btn--secondary c-btn--lg" data-view="courts">
+            Ver Canchas Disponibles ↗
+          </button>
+          <button type="button" id="btnSimularVista" class="c-btn c-btn--outline c-btn--sm" aria-pressed="false" style="color:#ffffff; border-color:rgba(255,255,255,0.4);" title="Prueba el diseño en simulación de pantalla compacta">
+            📱 Simular vista móvil
+          </button>
+          <button type="button" id="btnPwaInstall" class="c-btn c-btn--outline c-btn--sm" style="display:none; color:#fef08a; border-color:#fef08a;">
+            ⬇️ Instalar CanchaPlus
+          </button>
+        </div>
+      </div>
+
+      <!-- Selección de Deportes -->
+      <section aria-labelledby="sportsSectionTitle">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">MODOS DE JUEGO</span>
+            <h2 id="sportsSectionTitle">¿A qué jugamos hoy?</h2>
+          </div>
+          <span style="font-size:0.85rem; color:var(--color-text-muted);">Elige tu disciplina favorita</span>
+        </div>
+        <div id="sportsGrid" class="c-grid-sports">
+          <!-- Renderizado dinámicamente desde la BD -->
+        </div>
+      </section>
+
+      <!-- Características de la Instalación -->
+      <section style="margin-top: 2rem;">
+        <div class="c-smoke-grid">
+          <div class="c-smoke-card">
+            <span style="font-size:2rem;">🌱</span>
+            <b>Césped Certificado</b>
+            <small style="color:var(--color-text-muted);">Monofilamento 50mm para alto rendimiento y amortiguación articular.</small>
+          </div>
+          <div class="c-smoke-card">
+            <span style="font-size:2rem;">⚡</span>
+            <b>Iluminación LED</b>
+            <small style="color:var(--color-text-muted);">Luminarias profesionales para partidos nocturnos sin sombras.</small>
+          </div>
+          <div class="c-smoke-card">
+            <span style="font-size:2rem;">🚿</span>
+            <b>Vestuarios y Duchas</b>
+            <small style="color:var(--color-text-muted);">Agua caliente, lockers seguros y estacionamiento privado.</small>
+          </div>
+          <div class="c-smoke-card">
+            <span style="font-size:2rem;">🛡️</span>
+            <b>Reserva Garantizada</b>
+            <small style="color:var(--color-text-muted);">Disponibilidad en base de datos real con comprobante seguro.</small>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 2: DEPORTES (view-sports)
+         ==================================================================== -->
+    <section id="view-sports" class="c-view" aria-labelledby="sportsViewTitle">
+      <div class="c-panel">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">DISCIPLINAS DEPORTIVAS</span>
+            <h1 id="sportsViewTitle">Deportes en CanchaPlus</h1>
+          </div>
+          <button type="button" class="c-btn c-btn--outline c-btn--sm" data-view="courts">Ver todas las canchas</button>
+        </div>
+        <p style="margin-bottom:1.5rem;">
+          Explora nuestras disciplinas oficiales adaptadas a las normas reglamentarias y al entusiasmo del deporte paceño.
+        </p>
+        <div class="c-grid-sports">
+          <article class="c-sport-card" data-sport-code="futbol">
+            <div class="c-sport-card__header">
+              <span class="c-sport-card__symbol" aria-hidden="true">⚽</span>
+              <span class="c-sport-card__badge">FÚTBOL Y FUTSAL</span>
+            </div>
+            <h2 class="c-sport-card__title">Fútbol Sala / 5vs5</h2>
+            <p class="c-sport-card__desc">Canchas sintéticas con césped de alta densidad, graderías y mallas perimetrales completas.</p>
+            <button type="button" class="c-btn c-btn--primary c-btn--full" onclick="window.CanchaPlusApp.selectSport('futbol')">Ver Canchas de Fútbol →</button>
+          </article>
+          <article class="c-sport-card" data-sport-code="wally">
+            <div class="c-sport-card__header">
+              <span class="c-sport-card__symbol" aria-hidden="true">🏐</span>
+              <span class="c-sport-card__badge">WALLYBOL OFICIAL</span>
+            </div>
+            <h2 class="c-sport-card__title">Wally</h2>
+            <p class="c-sport-card__desc">Canchas cerradas con paredes reglamentarias acolchadas, piso de goma y balón oficial.</p>
+            <button type="button" class="c-btn c-btn--primary c-btn--full" onclick="window.CanchaPlusApp.selectSport('wally')">Ver Canchas de Wally →</button>
+          </article>
+          <article class="c-sport-card" data-sport-code="voley">
+            <div class="c-sport-card__header">
+              <span class="c-sport-card__symbol" aria-hidden="true">🏐</span>
+              <span class="c-sport-card__badge">VOLEIBOL COLISEO</span>
+            </div>
+            <h2 class="c-sport-card__title">Voleibol</h2>
+            <p class="c-sport-card__desc">Espacio deportivo con superficie de parquet pulido de alto impacto para torneos y prácticas.</p>
+            <button type="button" class="c-btn c-btn--primary c-btn--full" onclick="window.CanchaPlusApp.selectSport('voley')">Ver Canchas de Vóley →</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 3: CATÁLOGO DE CANCHAS (view-courts)
+         ==================================================================== -->
+    <section id="view-courts" class="c-view" aria-labelledby="courtsViewTitle">
+      <div class="c-panel">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">CATÁLOGO OFICIAL</span>
+            <h1 id="courtsViewTitle">Canchas Deportivas</h1>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <label for="filterSportSelect" class="sr-only">Filtrar por deporte</label>
+            <select id="filterSportSelect" class="c-field__select" style="min-width:160px;" onchange="window.CanchaPlusCourts.loadCourts(this.value)">
+              <option value="">Todos los deportes</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="courtsGrid" class="c-grid-courts">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 4: RESERVAS EN TIEMPO REAL (view-booking)
+         ==================================================================== -->
+    <section id="view-booking" class="c-view" aria-labelledby="bookingViewTitle">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <span class="c-panel__eyebrow">SISTEMA DE RESERVAS</span>
+          <h1 id="bookingCourtTitle">Reserva tu Cancha</h1>
+          <p id="bookingCourtLocation" style="font-size:0.9rem;">Selecciona una cancha para ver disponibilidad real.</p>
+        </div>
+        <div id="bookingRateDisplay" class="c-badge c-badge--success" style="font-size:1.1rem; padding:0.5rem 1rem;">
+          Bs. <b>40</b> / hora
+        </div>
+      </div>
+
+      <!-- Banner de Promoción con Contador en Vivo -->
+      <div class="c-promo-banner">
+        <div>
+          <span style="font-weight:800; color:var(--color-accent); font-size:0.8rem; letter-spacing:1px;">⚡ BENEFICIO DE TEMPORADA</span>
+          <h2 style="font-size:1.25rem; margin:0.25rem 0; color:#ffffff;">¡Reserva 2 horas y llévate un agua de 2 litros de regalo!</h2>
+          <p id="promoStatusText" style="font-size:0.88rem; color:#d1fae5; margin:0;">
+            Ideal para compartir después del partido con tu equipo.
+          </p>
+        </div>
+        <div class="c-promo-banner__clock">
+          <small style="display:block; font-size:0.7rem; letter-spacing:1px;">OFERTA LIMITADA</small>
+          <strong id="promoClock" class="c-promo-banner__time">30:00</strong>
+        </div>
+      </div>
+
+      <!-- Layout en 2 Columnas (Desktop) -->
+      <div class="c-booking-layout">
+        <!-- Columna Izquierda: Calendario y Horarios Reales -->
+        <div class="c-panel">
+          <div class="c-panel__header">
+            <div class="c-panel__title-wrap">
+              <span class="c-panel__eyebrow">PASO 1</span>
+              <h2>Fecha y Horario</h2>
+            </div>
+            <span style="font-size:0.8rem; color:var(--color-text-muted);">Verde: libre · Rojo: ocupado</span>
+          </div>
+
+          <div class="c-form-grid" style="margin-bottom:1rem;">
+            <div class="c-field">
+              <label for="resCourtSelect" class="c-field__label">Cancha Deportiva *</label>
+              <select id="resCourtSelect" class="c-field__select">
+                <option value="1">Cancha Sintética Futsal 1 (Bs. 40/h)</option>
+                <option value="2">Cancha Sintética Futsal 2 (Bs. 45/h)</option>
+                <option value="3">Cancha de Wally A (Bs. 30/h)</option>
+                <option value="4">Cancha de Wally B (Bs. 30/h)</option>
+                <option value="5">Coliseo de Voleibol Central (Bs. 35/h)</option>
+              </select>
+            </div>
+            <div class="c-field">
+              <label for="resDate" class="c-field__label">Fecha de Reserva *</label>
+              <input type="date" id="resDate" class="c-field__input" required />
+            </div>
+          </div>
+
+          <!-- Filtros de horario -->
+          <div class="c-filter-bar" role="group" aria-label="Filtro de estados de horarios">
+            <button type="button" class="c-filter-btn active" data-filter="all">Todos los horarios</button>
+            <button type="button" class="c-filter-btn" data-filter="available">Solo Disponibles</button>
+            <button type="button" class="c-filter-btn" data-filter="occupied">Solo Ocupados</button>
+          </div>
+
+          <!-- Grilla de Horarios Reales de BD -->
+          <div id="timeSlotsGrid" class="c-time-grid">
+            <!-- Cargados dinámicamente -->
+          </div>
+
+          <!-- Acordeón de Detalles del Servicio -->
+          <div class="c-accordion">
+            <button type="button" class="c-accordion__btn">
+              <span>📋 Normas de la cancha y equipamiento</span>
+              <span class="c-accordion__icon" aria-hidden="true">＋</span>
+            </button>
+            <div class="c-accordion__content">
+              <p>• Presentarse 10 minutos antes del horario reservado.</p>
+              <p>• Uso obligatorio de calzado deportivo con suela de goma (sin toperoles de aluminio).</p>
+              <p>• La disponibilidad se actualiza en tiempo real contra la base de datos central.</p>
+              <p>• Pago confirmado presencialmente en cancha o mediante transferencia autorizada.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Formulario del Cliente y Resumen -->
+        <div class="c-panel">
+          <div class="c-panel__header">
+            <div class="c-panel__title-wrap">
+              <span class="c-panel__eyebrow">PASO 2</span>
+              <h2>Tus Datos y Resumen</h2>
+            </div>
+          </div>
+
+          <form id="reservationForm" onsubmit="return false;" novalidate>
+            <div class="c-form-grid">
+              <div class="c-field full">
+                <label for="resName" class="c-field__label">Nombre completo *</label>
+                <input type="text" id="resName" class="c-field__input" placeholder="Ej. Juan Pérez" maxlength="80" required autocomplete="name" />
+                <small id="nameError" class="c-field__error" aria-live="polite"></small>
+              </div>
+
+              <div class="c-field full">
+                <label for="resPhone" class="c-field__label">Celular (Bolivia) *</label>
+                <input type="tel" id="resPhone" class="c-field__input" placeholder="Ej. 70000000 o +591 70000000" maxlength="16" required autocomplete="tel" />
+                <small id="phoneError" class="c-field__error" aria-live="polite"></small>
+              </div>
+
+              <div class="c-field full">
+                <label for="resEmail" class="c-field__label">Correo electrónico (opcional)</label>
+                <input type="email" id="resEmail" class="c-field__input" placeholder="tu.correo@ejemplo.com" autocomplete="email" />
+              </div>
+
+              <div class="c-field full">
+                <label for="resHours" class="c-field__label">Cantidad de Horas *</label>
+                <input type="number" id="resHours" class="c-field__input" value="1" min="1" max="8" required />
+                <small id="hoursError" class="c-field__error" aria-live="polite"></small>
+              </div>
+            </div>
+
+            <!-- Resumen Visual de la Reserva -->
+            <div class="c-voucher" style="margin-top:1.25rem;">
+              <div class="c-voucher__row">
+                <span>Cancha:</span>
+                <b id="summarySelectedCourt">Futsal 1</b>
+              </div>
+              <div class="c-voucher__row">
+                <span>Horario elegido:</span>
+                <b id="summarySelectedTime">Sin seleccionar</b>
+              </div>
+              <div class="c-voucher__row">
+                <span>Método de pago:</span>
+                <b>Presencial en cancha</b>
+              </div>
+              <div id="promoGiftBadge" style="display:none; font-size:0.85rem; color:var(--color-brand-primary); background:var(--color-brand-light); padding:0.4rem; border-radius:var(--radius-sm);"></div>
+              <div class="c-voucher__total">
+                <span>TOTAL A PAGAR:</span>
+                <b id="summaryTotal">Bs. 40</b>
+              </div>
+            </div>
+
+            <button type="button" id="btnOpenBookingModal" class="c-btn c-btn--primary c-btn--full c-btn--lg" style="margin-top:1.25rem;">
+              CONTINUAR CON RESERVA →
+            </button>
+            <p style="text-align:center; font-size:0.75rem; margin-top:0.5rem; color:var(--color-text-muted);">
+              🔒 La disponibilidad se valida en el servidor y se asegura con transacción en base de datos.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 5: MIS RESERVAS (view-my-reservations)
+         ==================================================================== -->
+    <section id="view-my-reservations" class="c-view" aria-labelledby="myReservationsTitle">
+      <div class="c-panel">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">HISTORIAL</span>
+            <h1 id="myReservationsTitle">Mis Reservas</h1>
+          </div>
+          <span style="font-size:0.85rem; color:var(--color-text-muted);">Consulta y gestiona tus reservas</span>
+        </div>
+
+        <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+          <label for="myReservationsSearch" class="sr-only">Buscar por celular, correo o código</label>
+          <input type="text" id="myReservationsSearch" class="c-field__input" style="flex:1; min-width:240px;" placeholder="Ingresa tu celular (ej. 70000000) o código (CP-2026-XXXX)..." />
+          <button type="button" id="btnSearchMyReservations" class="c-btn c-btn--primary">
+            🔍 Buscar Reservas
+          </button>
+        </div>
+
+        <div id="myReservationsList">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 6: ACTIVIDAD Y SMOKE TESTING (view-activity)
+         ==================================================================== -->
+    <section id="view-activity" class="c-view" aria-labelledby="activityTitle">
+      <div class="c-panel">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">CONTROL DE CALIDAD</span>
+            <h1 id="activityTitle">Bitácora de Sistema y Smoke Testing</h1>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" id="btnRunSemanticAudit" class="c-btn c-btn--outline c-btn--sm">
+              Auditoría Semántica A11y
+            </button>
+            <button type="button" id="btnRunSmokeTests" class="c-btn c-btn--secondary c-btn--sm">
+              🚀 Ejecutar Smoke Tests
+            </button>
+            <button type="button" id="btnClearActivity" class="c-btn c-btn--outline c-btn--sm">
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel de Resultados de Auditoría Semántica -->
+        <p id="auditResultDisplay" class="c-badge c-badge--success" aria-live="polite" style="width:100%; box-sizing:border-box; margin-bottom:1rem; padding:0.6rem 1rem;">
+          La auditoría semántica comprueba etiquetas HTML5, contraste, enlaces y controles accesibles.
+        </p>
+
+        <!-- Panel de Resultados de Smoke Tests -->
+        <div id="smokeTestResults" style="margin-bottom:1.5rem;"></div>
+
+        <!-- Lista de Bitácora -->
+        <h2>Registro de Actividad en Tiempo Real</h2>
+        <ul id="activityList" style="list-style:none; padding:0; margin-top:0.75rem; font-family:var(--font-mono); font-size:0.82rem; max-height:300px; overflow-y:auto; border:1px solid var(--color-border); border-radius:var(--radius-md); padding:0.75rem; background:var(--color-surface-subtle);">
+          <li>CanchaPlus cargado.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VISTA 7: PANEL ADMINISTRADOR (view-admin)
+         ==================================================================== -->
+    <section id="view-admin" class="c-view" aria-labelledby="adminTitle">
+      <div class="c-panel">
+        <div class="c-panel__header">
+          <div class="c-panel__title-wrap">
+            <span class="c-panel__eyebrow">ADMINISTRACIÓN</span>
+            <h1 id="adminTitle">Gestión de Canchas y Reservas</h1>
+          </div>
+          <span class="c-badge c-badge--success">Modo Administrador Activo</span>
+        </div>
+
+        <h2>Todas las Reservas del Servidor</h2>
+        <div id="adminReservationsList" style="overflow-x:auto; margin:1rem 0;"></div>
+
+        <h2 style="margin-top:2rem;">Registro de Auditoría de Base de Datos</h2>
+        <div id="adminAuditList" style="max-height:250px; overflow-y:auto; margin-top:0.75rem;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       NAVEGACIÓN INFERIOR PARA DISPOSITIVOS MÓVILES (Bottom Nav)
+       ====================================================================== -->
+  <nav class="c-bottom-nav" aria-label="Navegación inferior móvil">
+    <button type="button" class="c-bottom-nav__item active" data-view="home">
+      <span class="c-bottom-nav__icon">⌂</span>
+      <span>Inicio</span>
+    </button>
+    <button type="button" class="c-bottom-nav__item" data-view="sports">
+      <span class="c-bottom-nav__icon">⚽</span>
+      <span>Deportes</span>
+    </button>
+    <button type="button" class="c-bottom-nav__item" data-view="courts">
+      <span class="c-bottom-nav__icon">🏟️</span>
+      <span>Canchas</span>
+    </button>
+    <button type="button" class="c-bottom-nav__item" data-view="booking">
+      <span class="c-bottom-nav__icon">📅</span>
+      <span>Reservar</span>
+    </button>
+    <button type="button" class="c-bottom-nav__item" data-view="my-reservations">
+      <span class="c-bottom-nav__icon">📋</span>
+      <span>Mis Reservas</span>
+    </button>
+  </nav>
+
+  <!-- ======================================================================
+       MODALES DEL SISTEMA
+       ====================================================================== -->
+
+  <!-- Modal 1: Confirmación de Reserva -->
+  <div id="bookingModal" class="c-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+    <div class="c-modal">
+      <div class="c-modal__header">
+        <h2 id="bookingModalTitle" style="font-size:1.25rem; margin:0;">Revisa tu Reserva</h2>
+        <button type="button" class="c-modal__close btn-close-modal" aria-label="Cerrar modal">×</button>
+      </div>
+      <div class="c-modal__body">
+        <div class="c-voucher">
+          <div class="c-voucher__row"><span>Cliente:</span><b id="modalCustomer">—</b></div>
+          <div class="c-voucher__row"><span>Celular:</span><b id="modalPhone">—</b></div>
+          <div class="c-voucher__row"><span>Deporte:</span><b id="modalSport">—</b></div>
+          <div class="c-voucher__row"><span>Cancha:</span><b id="modalCourt">—</b></div>
+          <div class="c-voucher__row"><span>Fecha:</span><b id="modalDate">—</b></div>
+          <div class="c-voucher__row"><span>Horario:</span><b id="modalTime">—</b></div>
+          <div class="c-voucher__row"><span>Modalidad:</span><b id="modalMethod">Presencial en cancha</b></div>
+          <div class="c-voucher__total">
+            <span>MONTO TOTAL:</span>
+            <b id="modalTotal">Bs. 40</b>
+          </div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--color-text-muted); margin-top:0.75rem;">
+          Al presionar CONFIRMAR, se registrará la reserva directamente en la base de datos y se bloqueará el horario para evitar duplicados.
+        </p>
+      </div>
+      <div class="c-modal__footer">
+        <button type="button" class="c-btn c-btn--outline btn-close-modal">Cancelar</button>
+        <button type="button" id="btnConfirmBooking" class="c-btn c-btn--primary">CONFIRMAR RESERVA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Comprobante Oficial de Reserva -->
+  <div id="receiptModal" class="c-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="receiptModalTitle">
+    <div class="c-modal">
+      <div class="c-modal__header">
+        <h2 id="receiptModalTitle" style="font-size:1.25rem; margin:0;">Comprobante de Reserva</h2>
+        <button type="button" class="c-modal__close btn-close-modal" aria-label="Cerrar comprobante">×</button>
+      </div>
+      <div class="c-modal__body">
+        <div class="c-voucher" style="border-style:solid; border-color:var(--color-brand-primary);">
+          <div style="text-align:center; padding-bottom:0.75rem; border-bottom:1px solid var(--color-border);">
+            <div style="font-size:1.5rem; font-weight:900; color:var(--color-brand-primary);">CANCHAPLUS</div>
+            <small style="color:var(--color-text-muted);">Comprobante Oficial · La Paz, Bolivia</small>
+            <div style="margin-top:0.5rem; font-size:1.35rem; font-weight:800; font-family:var(--font-mono); color:var(--color-brand-dark);" id="receiptCode">CP-2026-XXXX</div>
+          </div>
+          <div class="c-voucher__row"><span>Cliente:</span><b id="receiptCustomer">—</b></div>
+          <div class="c-voucher__row"><span>Contacto:</span><b id="receiptPhone">—</b></div>
+          <div class="c-voucher__row"><span>Cancha:</span><b id="receiptCourt">—</b></div>
+          <div class="c-voucher__row"><span>Fecha / Hora:</span><b id="receiptDate">—</b></div>
+          <div class="c-voucher__row"><span>Duración:</span><b id="receiptDuration">—</b></div>
+          <div class="c-voucher__row"><span>Estado:</span><b id="receiptStatus" style="color:var(--color-success);">CONFIRMADA</b></div>
+          <div class="c-voucher__total">
+            <span>TOTAL:</span>
+            <b id="receiptTotal">Bs. 40</b>
+          </div>
+        </div>
+        <p style="font-size:0.75rem; color:var(--color-text-muted); margin-top:0.75rem; text-align:center;">
+          Presenta este comprobante o tu número de celular al ingresar a las instalaciones.
+        </p>
+      </div>
+      <div class="c-modal__footer">
+        <button type="button" class="c-btn c-btn--outline btn-close-modal">Cerrar</button>
+        <button type="button" class="c-btn c-btn--primary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Inicio de Sesión y Acceso Administrador -->
+  <div id="authModal" class="c-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+    <div class="c-modal">
+      <div class="c-modal__header">
+        <h2 id="authModalTitle" style="font-size:1.25rem; margin:0;">Acceso a CanchaPlus</h2>
+        <button type="button" class="c-modal__close btn-close-modal" aria-label="Cerrar modal de acceso">×</button>
+      </div>
+      <div class="c-modal__body">
+        <form id="formAuthLogin">
+          <div class="c-field" style="margin-bottom:1rem;">
+            <label for="loginEmail" class="c-field__label">Correo Electrónico *</label>
+            <input type="email" id="loginEmail" class="c-field__input" placeholder="admin@canchaplus.bo" required autocomplete="email" />
+          </div>
+          <div class="c-field" style="margin-bottom:1rem;">
+            <label for="loginPassword" class="c-field__label">Contraseña *</label>
+            <input type="password" id="loginPassword" class="c-field__input" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+          <p style="font-size:0.8rem; color:var(--color-text-muted);">
+            Para ingresar como administrador en entorno de desarrollo usa: <code>admin@canchaplus.bo</code> y la contraseña definida en el servidor.
+          </p>
+          <div style="margin-top:1.25rem; display:flex; justify-content:flex-end; gap:0.5rem;">
+            <button type="button" class="c-btn c-btn--outline btn-close-modal">Cancelar</button>
+            <button type="submit" id="btnLoginSubmit" class="c-btn c-btn--primary">Iniciar Sesión</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Configuración de URL del Backend API -->
+  <div id="apiConfigModal" class="c-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="apiConfigTitle">
+    <div class="c-modal">
+      <div class="c-modal__header">
+        <h2 id="apiConfigTitle" style="font-size:1.25rem; margin:0;">Configuración de Conexión Backend</h2>
+        <button type="button" class="c-modal__close btn-close-modal" aria-label="Cerrar configuración">×</button>
+      </div>
+      <div class="c-modal__body">
+        <p style="font-size:0.88rem; margin-bottom:1rem;">
+          Esta opción permite apuntar el frontend a tu servidor backend local (por ejemplo <code>http://localhost:3000/api</code>) o a un servidor en la nube (Render, Railway, VPS) cuando la página se publica en GitHub Pages.
+        </p>
+        <div class="c-field">
+          <label for="inputApiBaseUrl" class="c-field__label">URL Base de la API REST *</label>
+          <input type="url" id="inputApiBaseUrl" class="c-field__input" placeholder="http://localhost:3000/api" />
+        </div>
+      </div>
+      <div class="c-modal__footer">
+        <button type="button" class="c-btn c-btn--outline btn-close-modal">Cancelar</button>
+        <button type="button" id="btnSaveApiConfig" class="c-btn c-btn--primary">Guardar y Reconectar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificación Toast Global -->
+  <div id="globalToast" class="c-toast" role="status" aria-live="polite"></div>
+
+  <!-- Librerías de Terceros (Locales y Sanitizadas) -->
+  <script src="vendor/jquery-3.7.1.min.js"></script>
+  <script src="vendor/purify.min.js"></script>
+
+  <!-- Módulos de la Aplicación CanchaPlus -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/courts.js"></script>
+  <script src="js/reservations.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/accessibility.js"></script>
+  <script src="js/smoke-test.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,72 +1,139 @@
-const CACHE_NAME = "deporzone-arena-v4";
+/**
+ * CANCHAPLUS — SERVICE WORKER PWA (v2.0.0)
+ * Gestión de Caché de Recursos Estáticos y Funcionamiento Sin Conexión
+ */
+
+const CACHE_NAME = 'canchaplus-shell-v2';
+
 const APP_SHELL = [
-  "./",
-  "./index.html",
-  "./mobile.html",
-  "./styles.css",
-  "./script.js",
-  "./lazy-loader.js",
-  "./components/booking-view.js",
-  "./pwa.js",
-  "./manifest.json",
-  "./mobile-manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  './',
+  './index.html',
+  './manifest.json',
+  './css/variables.css',
+  './css/base.css',
+  './css/layout.css',
+  './css/components.css',
+  './css/responsive.css',
+  './css/accessibility.css',
+  './js/app.js',
+  './js/api.js',
+  './js/auth.js',
+  './js/courts.js',
+  './js/reservations.js',
+  './js/components.js',
+  './js/accessibility.js',
+  './js/smoke-test.js',
+  './vendor/jquery-3.7.1.min.js',
+  './vendor/purify.min.js',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './assets/images/court-futbol.svg',
+  './assets/images/court-futbol2.svg',
+  './assets/images/court-wally.svg',
+  './assets/images/court-wally2.svg',
+  './assets/images/court-voley.svg',
+  './assets/images/hero-stadium.svg'
 ];
 
-self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", event => {
+// Instalación: Precargar shell de la aplicación
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key.startsWith("deporzone-") && key !== CACHE_NAME).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      await Promise.all(
+        APP_SHELL.map(async (url) => {
+          try {
+            const response = await fetch(new Request(url, { cache: 'reload' }));
+            if (response.ok) {
+              await cache.put(url, response);
+            }
+          } catch (err) {
+            console.warn(`[SW] No se pudo precachear: ${url}`);
+          }
+        })
+      );
+      await self.skipWaiting();
+    })()
   );
 });
 
-self.addEventListener("fetch", event => {
-  const request = event.request;
-  if (request.method !== "GET") return;
-  const url = new URL(request.url);
-
-  if (url.origin === self.location.origin) {
-    if (request.mode === "navigate") {
-      event.respondWith(
-        fetch(request).then(response => {
-          if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-          return response;
-        }).catch(async () => {
-          const cached = await caches.match(request);
-          if (cached) return cached;
-          return caches.match(url.pathname.endsWith("/mobile.html") ? "./mobile.html" : "./index.html");
-        })
+// Activación: Limpieza de cachés anteriores
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((k) => k.startsWith('canchaplus-') && k !== CACHE_NAME)
+          .map((k) => caches.delete(k))
       );
-      return;
-    }
+      await self.clients.claim();
+    })()
+  );
+});
+
+// Intercepción de peticiones (Fetch)
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+
+  // Las peticiones al backend API (/api/*) van directas a la red (Network Only / No caching de reservas privadas)
+  if (url.pathname.includes('/api/')) {
     event.respondWith(
-      caches.match(request).then(cached => cached || fetch(request).then(response => {
-        if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-        return response;
-      }))
+      fetch(req).catch(() => {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error: 'Modo sin conexión: El servidor backend no está disponible en este momento.'
+          }),
+          {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      })
     );
     return;
   }
 
-  // Cache-first para jQuery/CDN y recursos externos después de su primera carga online.
+  // Navegación (HTML de inicio)
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      (async () => {
+        try {
+          const fresh = await fetch(req);
+          if (fresh.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(req, fresh.clone());
+          }
+          return fresh;
+        } catch {
+          const cached = await caches.match(req);
+          return cached || (await caches.match('./index.html'));
+        }
+      })()
+    );
+    return;
+  }
+
+  // Recursos estáticos (Cache First con actualización en segundo plano)
   event.respondWith(
-    caches.open(CACHE_NAME).then(async cache => {
-      const cached = await cache.match(request);
+    (async () => {
+      const cached = await caches.match(req);
       if (cached) return cached;
+
       try {
-        const response = await fetch(request);
-        if (response.ok || response.type === "opaque") cache.put(request, response.clone());
+        const response = await fetch(req);
+        if (response.ok && url.origin === self.location.origin) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, response.clone());
+        }
         return response;
-      } catch {
+      } catch (err) {
         return Response.error();
       }
-    })
+    })()
   );
 });
