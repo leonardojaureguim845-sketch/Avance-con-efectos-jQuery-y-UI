@@ -293,4 +293,43 @@ En la pestaña **"Actividad"**, pulsa el botón **"🚀 Ejecutar Smoke Tests"** 
 
 ---
 
+## 🗄️ Supabase (opcional)
+
+Se incluyen scripts en `supabase/`:
+- `schema.sql`: tablas, relaciones, índices y trigger de perfil.
+- `rls.sql`: políticas Row Level Security.
+- `seed.sql`: datos iniciales.
+- `README.md`: instrucciones de configuración.
+
+La app usa por defecto el backend Node/SQLite. Para migrar a Supabase, sigue `supabase/README.md`.
+
+---
+
+## 🚀 Preparación para GitHub y despliegue
+
+### Independencia
+- El proyecto es autocontenido en `reservas/`.
+- No depende de archivos externos ni rutas absolutas.
+- `.env.example` documenta todas las variables.
+
+### GitHub Pages (frontend estático)
+1. Sube el repositorio a GitHub.
+2. Settings → Pages → Source: `main` / `/ (root)`.
+3. La app quedará en: `https://<usuario>.github.io/<repo>/reservas/`.
+4. Configura la URL del backend con “⚙️ Conexión API”.
+
+### Backend / Supabase
+- Node/SQLite: ejecuta `backend/src/server.js` (requiere Node ≥ 22.3).
+- Supabase: sigue `supabase/README.md` para crear tablas, RLS y datos iniciales.
+
+### Verificación antes de publicar
+- [ ] Sin errores 404 en consola.
+- [ ] CSS/JS/imágenes cargan.
+- [ ] Service Worker se registra.
+- [ ] Modo claro/oscuro y alto contraste funcionan.
+- [ ] Smoke Tests ejecutados.
+- [ ] Sin secretos en el repositorio.
+
+---
+
 **CanchaPlus · Universidad Privada Domingo Savio — Sede La Paz · 2026**
