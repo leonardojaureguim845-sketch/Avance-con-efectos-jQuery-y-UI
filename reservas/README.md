@@ -293,6 +293,27 @@ En la pestaña **"Actividad"**, pulsa el botón **"🚀 Ejecutar Smoke Tests"** 
 
 ---
 
+## 📴 Offline First
+
+CanchaPlus incluye soporte Offline First:
+- **IndexedDB** (`js/offline.js`) almacena deportes, canchas, disponibilidad, reservas y solicitudes pendientes.
+- La app abre y navega sin Internet después de la primera carga.
+- Las reservas completadas sin conexión se guardan como **pendientes** y se sincronizan automáticamente al recuperar Internet.
+- Un badge en la cabecera muestra el estado de conexión.
+
+### Cómo probar offline
+1. Abre la app con Internet y navega por deportes/canchas.
+2. Desactiva Internet (DevTools → Network → Offline o modo avión).
+3. Recarga: la app abre y muestra datos en caché.
+4. Completa una reserva: se guarda como pendiente.
+5. Reactiva Internet: la reserva se sincroniza y se confirma si el horario sigue libre.
+
+### Limitaciones
+- Las reservas nunca se confirman sin validación del servidor.
+- Los datos offline son una caché de lo previamente consultado.
+
+---
+
 ## 🗄️ Supabase (opcional)
 
 Se incluyen scripts en `supabase/`:

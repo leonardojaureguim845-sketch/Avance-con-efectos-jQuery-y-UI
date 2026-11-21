@@ -126,16 +126,29 @@ const reservationsModule = {
       $('#availabilityNotice').remove();
       this.renderSlots(slots);
       $('#headerConnectionBadge').removeClass('offline').html('● BD Conectada');
+       if (window.OfflineStore) { try { await window.OfflineStore.saveAvailability(this.currentCourt.id_cancha, date, slots); } catch (e) {} }
     } catch (err) {
-      // Modo sin conexión / Fallback con slots estándar del sistema
-      const fallbackSlots = DEFAULT_HOURS_LIST.map((h, i) => ({
-        id_horario: i + 1,
-        hora_inicio: h,
-        disponible: true,
-        estado: 'DISPONIBLE'
-      }));
-
-      this.renderSlots(fallbackSlots);
+      // Modo sin conexion: intentar IndexedDB primero
+      let usedCache = false;
+      if (window.OfflineStore) {
+        try {
+          const cached = await window.OfflineStore.getAvailability(this.currentCourt.id_cancha, date);
+          if (cached && cached.slots && cached.slots.length) {
+             $('#availabilityNotice').remove();
+            this.renderSlots(cached.slots);
+            usedCache = true;
+          }
+        } catch (e) {}
+      }
+      if (!usedCache) {
+        const fallbackSlots = DEFAULT_HOURS_LIST.map((h, i) => ({
+          id_horario: i + 1,
+          hora_inicio: h,
+          disponible: true,
+          estado: 'DISPONIBLE'
+        }));
+        this.renderSlots(fallbackSlots);
+      }
       if (!$('#availabilityNotice').length) {
         $grid.before(`
           <div id="availabilityNotice" style="font-size:0.8rem; padding:0.5rem 0.8rem; border-radius:var(--radius-sm); background:var(--color-surface-subtle); border-left:4px solid var(--color-accent); margin-bottom:0.75rem;">
@@ -458,7 +471,33 @@ const reservationsModule = {
 
       $container.append($el);
     });
-  }
+  },
+  async syncPending() {
+    if (!window.OfflineStore) return;
+    const pending = await window.OfflineStore.getPending();
+    if (!pending || !pending.length) return;
+    window.CanchaPlusComponents.showToast('Sincronizando reservas pendientes...', 'info');
+    for (const op of pending) {
+      if (op.type !== 'reservation') continue;
+      try {
+        const res = await window.CanchaPlusAPI.createReserva(op.payload);
+        if (res && res.data) {
+          await window.OfflineStore.saveReservation(res.data);
+          await window.OfflineStore.removePending(op.opId);
+          window.CanchaPlusApp.addLog('Reserva sincronizada: ' + res.data.codigo_reserva);
+          window.CanchaPlusComponents.showToast('Reserva confirmada: ' + res.data.codigo_reserva, 'success');
+        }
+      } catch (err) {
+        if (err.status === 400) {
+          await window.OfflineStore.removePending(op.opId);
+          window.CanchaPlusComponents.showToast('Reserva rechazada: ' + err.message, 'error');
+          window.CanchaPlusApp.addLog('Reserva pendiente rechazada: ' + err.message);
+        } else {
+          window.CanchaPlusApp.addLog('Sincronizacion fallida (se reintentara): ' + err.message);
+        }
+      }
+    }
+  },
 };
 
 window.CanchaPlusReservations = reservationsModule;

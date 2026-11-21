@@ -46,10 +46,21 @@ const courtsModule = {
         this.renderSports(this.sportsCache);
         this.populateSportSelects(this.sportsCache);
         $('#headerConnectionBadge').removeClass('offline').html('● BD Conectada');
+         if (window.OfflineStore) { try { await window.OfflineStore.saveSports(res.data); } catch (e) {} }
       }
     } catch (err) {
       console.info('Catálogo de deportes servido desde App Shell (Servidor backend desconectado):', err.message);
       $('#headerConnectionBadge').addClass('offline').html('● Modo catálogo (configura tu backend)');
+       if (window.OfflineStore) {
+         try {
+           const cached = await window.OfflineStore.getSports();
+           if (cached && cached.length) {
+             this.sportsCache = cached;
+             this.renderSports(this.sportsCache);
+             this.populateSportSelects(this.sportsCache);
+           }
+         } catch (e) {}
+       }
     }
   },
 
@@ -91,10 +102,23 @@ const courtsModule = {
       if (res && res.ok && Array.isArray(res.data) && res.data.length > 0) {
         this.courtsCache = res.data;
         this.renderCourts(this.courtsCache);
+        if (window.OfflineStore) { try { await window.OfflineStore.saveCourts(res.data); } catch (e) {} }
         return;
       }
     } catch (err) {
       console.info('Catálogo de canchas servido desde App Shell:', err.message);
+       if (window.OfflineStore) {
+         try {
+           const cached = await window.OfflineStore.getCourts();
+           if (cached && cached.length) {
+             this.courtsCache = cached;
+             let courts = cached;
+             if (sportCode) courts = courts.filter(c => c.deporte_codigo === sportCode || String(c.id_deporte) === String(sportCode));
+             this.renderCourts(courts);
+             return;
+           }
+         } catch (e) {}
+       }
     }
 
     // Filtrar sobre caché predeterminado si el servidor no responde

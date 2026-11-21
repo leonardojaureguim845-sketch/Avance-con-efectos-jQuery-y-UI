@@ -23,9 +23,17 @@ const app = {
     window.CanchaPlusComponents.init();
     window.CanchaPlusA11y.init();
     window.CanchaPlusSmokeTest.init();
+    if (navigator.onLine && window.CanchaPlusReservations && typeof window.CanchaPlusReservations.syncPending === 'function') {
+      window.CanchaPlusReservations.syncPending();
+    }
 
     // Eventos de conectividad
-    window.addEventListener('online', () => this.updateOnlineBadge());
+    window.addEventListener('online', () => {
+      this.updateOnlineBadge();
+      if (window.CanchaPlusReservations && typeof window.CanchaPlusReservations.syncPending === 'function') {
+        window.CanchaPlusReservations.syncPending();
+      }
+    });
     window.addEventListener('offline', () => this.updateOnlineBadge());
 
     // Registro inicial en bitácora
