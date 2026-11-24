@@ -72,7 +72,7 @@ function createCourt(courtData, adminUser = 'admin', ip = '127.0.0.1') {
     INSERT INTO canchas (id_deporte, nombre, descripcion, precio_hora, ubicacion, foto_url, estado)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
-  const result = stmt.run(
+  stmt.run(
     courtData.id_deporte,
     courtData.nombre,
     courtData.descripcion,
@@ -82,7 +82,7 @@ function createCourt(courtData, adminUser = 'admin', ip = '127.0.0.1') {
     courtData.estado || 'disponible'
   );
   
-  const created = db.prepare('SELECT * FROM canchas WHERE id_cancha = ?').get(result.lastInsertRowid);
+  const created = db.prepare('SELECT * FROM canchas WHERE rowid = last_insert_rowid()').get();
   
   recordAudit({
     tabla: 'canchas',

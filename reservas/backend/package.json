@@ -18,8 +18,5 @@
     "sports-booking"
   ],
   "author": "CanchaPlus Engineering - UPDS",
-  "license": "ISC",
-  "engines": {
-    "node": ">=22.3.0"
-  }
+  "license": "ISC"
 }

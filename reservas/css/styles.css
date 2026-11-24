@@ -1,0 +1,1432 @@
+/* CanchaPlus — CSS unificado. Se conserva el orden original de carga para mantener la cascada. */
+
+/* ===== variables.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — VARIABLES DE DISEÑO (CSS Custom Properties)
+ * Proporción 60-30-10:
+ * - 60% Dominante neutro (fondo, lienzo y superficies)
+ * - 30% Secundario estructural (verde deportivo institucional, bordes, tarjetas)
+ * - 10% Acento energético (oro / verde lima brillante para acciones y llamadas)
+ */
+
+:root {
+  /* Paleta Base - Modo Claro */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-subtle: #f1f5f9;
+  
+  --color-text-main: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #ffffff;
+
+  /* 30% Secundario Estructural (Identidad Verde CanchaPlus) */
+  --color-brand-primary: #15803d;     /* Verde césped principal */
+  --color-brand-dark: #14532d;        /* Verde profundo institucional */
+  --color-brand-light: #dcfce7;       /* Verde suave para badges y fondos */
+  --color-brand-hover: #166534;
+
+  /* 10% Acento Dinámico */
+  --color-accent: #f59e0b;            /* Dorado trofeo / energía */
+  --color-accent-hover: #d97706;
+  --color-accent-light: #fef3c7;
+  --color-accent-glow: rgba(245, 158, 11, 0.35);
+
+  /* Estados Funcionales */
+  --color-success: #16a34a;
+  --color-success-bg: #f0fdf4;
+  --color-success-border: #bbf7d0;
+
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+
+  --color-border: #e2e8f0;
+  --color-border-subtle: #edf2f7;
+  --color-border-focus: #15803d;
+
+  /* Tipografía */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Radios de Borde */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Sombras Suaves */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+  /* Transiciones */
+  --transition-fast: 150ms ease;
+  --transition-normal: 240ms ease;
+
+  /* Z-index */
+  --z-header: 100;
+  --z-bottom-nav: 200;
+  --z-toast: 300;
+  --z-modal: 400;
+}
+
+/* Modo Oscuro (Activable por clase o atributo) */
+body.dz-night-mode,
+[data-theme="dark"] {
+  --color-bg: #0b1319;
+  --color-surface: #131f29;
+  --color-surface-elevated: #1a2a38;
+  --color-surface-subtle: #182531;
+
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #0b1319;
+
+  --color-brand-primary: #22c55e;
+  --color-brand-dark: #15803d;
+  --color-brand-light: #052e16;
+  --color-brand-hover: #16a34a;
+
+  --color-accent: #fbbf24;
+  --color-accent-hover: #f59e0b;
+  --color-accent-light: #451a03;
+  --color-accent-glow: rgba(251, 191, 36, 0.35);
+
+  --color-success: #4ade80;
+  --color-success-bg: #052e16;
+  --color-success-border: #166534;
+
+  --color-danger: #f87171;
+  --color-danger-bg: #450a0a;
+  --color-danger-border: #991b1b;
+
+  --color-border: #223445;
+  --color-border-subtle: #1c2c3b;
+  --color-border-focus: #22c55e;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* Modo Demostrativo de Alto Contraste (A11y) */
+body.high-contrast {
+  --color-bg: #000000 !important;
+  --color-surface: #0a0a0a !important;
+  --color-surface-elevated: #141414 !important;
+  --color-surface-subtle: #202020 !important;
+
+  --color-text-main: #ffffff !important;
+  --color-text-muted: #e2e8f0 !important;
+  --color-text-inverse: #000000 !important;
+
+  --color-brand-primary: #00ff66 !important;
+  --color-brand-dark: #000000 !important;
+  --color-brand-light: #003311 !important;
+
+  --color-accent: #ffff00 !important;
+  --color-border: #ffffff !important;
+  --color-border-subtle: #ffffff !important;
+  --color-border-focus: #ffff00 !important;
+
+  --color-success: #00ff00 !important;
+  --color-danger: #ff3333 !important;
+}
+
+/* ===== base.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — REGLAS BASE Y RESET CSS
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  overflow-x: hidden;
+}
+
+/* Enlaces y botones base */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tipografía de Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-main);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+h2 {
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+}
+
+h3 {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+p {
+  color: var(--color-text-muted);
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+/* Accesibilidad del foco */
+:focus-visible {
+  outline: 3px solid var(--color-brand-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* Enlace para saltar al contenido principal */
+.c-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--color-accent);
+  color: #000;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  z-index: 10000;
+  transition: top var(--transition-fast);
+}
+
+.c-skip-link:focus {
+  top: 1rem;
+}
+
+/* ===== layout.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — ESTRUCTURA Y SISTEMA DE DISEÑO RESPONSIVO (Layout)
+ * Mobile-First con CSS Grid y Flexbox
+ */
+
+/* Contenedor Principal */
+.c-app-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1rem 1rem 6rem; /* Margen inferior para no tapar navegación móvil */
+}
+
+/* Barra Superior / Header */
+.c-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-normal);
+}
+
+.c-header__topline {
+  background: var(--color-brand-dark);
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  padding: 0.35rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.c-header__topline-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.c-header__badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.c-header__badge-status.offline {
+  background: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.c-header__navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* Marca / Logotipo */
+.c-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.c-brand__mark {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-dark));
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.3);
+}
+
+.c-brand__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-brand__title {
+  font-weight: 900;
+  font-size: 1.25rem;
+  color: var(--color-text-main);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.c-brand__subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* Navegación Desktop */
+.c-nav-desktop {
+  display: none; /* Se activa en >= 768px */
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.c-nav-link {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.c-nav-link:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-main);
+}
+
+.c-nav-link.active {
+  background: var(--color-brand-light);
+  color: var(--color-brand-dark);
+  font-weight: 700;
+}
+
+body.dz-night-mode .c-nav-link.active {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--color-brand-primary);
+}
+
+/* Acciones en Header (Temas, Accesibilidad, Menú Móvil) */
+.c-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.c-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  font-size: 1.1rem;
+  transition: all var(--transition-fast);
+}
+
+.c-icon-btn:hover {
+  background: var(--color-border);
+}
+
+.c-menu-toggle {
+  display: flex; /* En móvil visible, oculto en desktop */
+}
+
+/* Menú Desplegable Móvil */
+.c-mobile-drawer {
+  display: none;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.c-mobile-drawer.is-open {
+  display: flex;
+}
+
+.c-mobile-drawer .c-nav-link {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Navegación Inferior Móvil (Bottom Navigation) */
+.c-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-bottom-nav);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.4rem 0.5rem;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.c-bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-width: 58px;
+  padding: 0.35rem 0.2rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.c-bottom-nav__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.c-bottom-nav__item.active {
+  color: var(--color-brand-primary);
+  font-weight: 700;
+}
+
+/* Vistas Principales (SPA con transiciones limpias) */
+.c-view {
+  display: none;
+  animation: fadeIn 220ms ease;
+}
+
+.c-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grillas Base (Mobile-First) */
+.c-grid-sports {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.c-grid-courts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+/* Sección de Reserva (Grid 2 columnas en Desktop) */
+.c-booking-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+/* Simulación de Vista Móvil / Escritorio (para demostración académica) */
+.sim-movil {
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  box-shadow: 0 0 0 12px #1e293b, 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 36px !important;
+  overflow: hidden !important;
+  background: var(--color-bg) !important;
+  padding: 1rem !important;
+}
+
+/* ===== components.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — COMPONENTES DE INTERFAZ (BEM)
+ */
+
+/* ==========================================================================
+   1. HERO BANNER
+   ========================================================================== */
+.c-hero {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-brand-dark) 0%, #1e4a36 60%, #0d291b 100%);
+  color: #ffffff;
+  padding: 2.25rem 2rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.c-hero__glow {
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+
+.c-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.c-hero__title {
+  color: #ffffff;
+  margin: 0;
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  line-height: 1.15;
+}
+
+.c-hero__title em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.c-hero__description {
+  color: #d1fae5;
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0;
+}
+
+.c-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   2. BOTONES (c-btn)
+   ========================================================================== */
+.c-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-align: center;
+  user-select: none;
+}
+
+.c-btn--primary {
+  background: var(--color-brand-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25);
+}
+
+.c-btn--primary:hover {
+  background: var(--color-brand-hover);
+  transform: translateY(-1px);
+}
+
+.c-btn--secondary {
+  background: var(--color-accent);
+  color: #172033;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+}
+
+.c-btn--secondary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.c-btn--outline {
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-main);
+}
+
+.c-btn--outline:hover {
+  background: var(--color-surface-subtle);
+  border-color: var(--color-brand-primary);
+}
+
+.c-btn--danger {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.c-btn--danger:hover {
+  filter: brightness(0.9);
+}
+
+.c-btn--sm {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.82rem;
+}
+
+.c-btn--lg {
+  padding: 0.95rem 1.75rem;
+  font-size: 1.1rem;
+}
+
+.c-btn--full {
+  width: 100%;
+}
+
+/* ==========================================================================
+   3. TARJETAS DE DEPORTES (c-sport-card)
+   ========================================================================== */
+.c-sport-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  text-align: left;
+}
+
+.c-sport-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-brand-primary);
+}
+
+.c-sport-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.c-sport-card__symbol {
+  font-size: 2.75rem;
+  line-height: 1;
+}
+
+.c-sport-card__badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--color-brand-dark);
+  background: var(--color-brand-light);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+body.dz-night-mode .c-sport-card__badge {
+  color: var(--color-brand-primary);
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.c-sport-card__title {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.c-sport-card__desc {
+  font-size: 0.9rem;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.c-sport-card__action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  font-size: 0.88rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   4. TARJETAS DE CANCHAS (c-court-card)
+   ========================================================================== */
+.c-court-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.c-court-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-brand-primary);
+}
+
+.c-court-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.c-court-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.c-court-card:hover .c-court-card__img {
+  transform: scale(1.03);
+}
+
+.c-court-card__price-badge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.c-court-card__price-badge b {
+  color: var(--color-accent);
+}
+
+.c-court-card__body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.c-court-card__location {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   5. PANELES Y CAJAS (c-panel)
+   ========================================================================== */
+.c-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.c-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.c-panel__title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-panel__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--color-brand-primary);
+}
+
+/* ==========================================================================
+   6. SELECTOR DE HORARIOS Y FILTRO (c-time-slot)
+   ========================================================================== */
+.c-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.c-filter-btn {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.c-filter-btn.active {
+  background: var(--color-brand-primary);
+  color: #ffffff;
+  border-color: var(--color-brand-primary);
+}
+
+.c-time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+
+.c-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-weight: 800;
+  font-size: 1.05rem;
+  transition: all var(--transition-fast);
+}
+
+.c-slot small {
+  font-size: 0.68rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+.c-slot--available {
+  border-color: var(--color-success-border);
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.c-slot--available:hover {
+  transform: translateY(-2px);
+  background: var(--color-brand-primary);
+  color: #ffffff;
+  border-color: var(--color-brand-primary);
+}
+
+.c-slot--occupied {
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.c-slot--selected {
+  background: var(--color-brand-primary) !important;
+  color: #ffffff !important;
+  border-color: var(--color-brand-primary) !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4);
+}
+
+/* ==========================================================================
+   7. FORMULARIOS Y CAMPOS (c-field)
+   ========================================================================== */
+.c-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.c-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.c-field__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.c-field__input,
+.c-field__select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.c-field__input:focus,
+.c-field__select:focus {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  outline: none;
+}
+
+.c-field__input.is-invalid {
+  border-color: var(--color-danger) !important;
+  background-color: var(--color-danger-bg);
+}
+
+.c-field__input.is-valid {
+  border-color: var(--color-success) !important;
+}
+
+.c-field__error {
+  font-size: 0.78rem;
+  color: var(--color-danger);
+  font-weight: 600;
+  min-height: 1.1rem;
+}
+
+.c-field__error:empty {
+  display: none;
+}
+
+/* ==========================================================================
+   8. BANNER PROMOCIONAL Y TIMER
+   ========================================================================== */
+.c-promo-banner {
+  background: linear-gradient(135deg, #173e32, #286b50);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.c-promo-banner__clock {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1rem;
+  text-align: center;
+  min-width: 130px;
+}
+
+.c-promo-banner__time {
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   9. RESUMEN Y COMPROBANTE DE RESERVA (c-voucher)
+   ========================================================================== */
+.c-voucher {
+  background: var(--color-surface);
+  border: 2px dashed var(--color-brand-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.c-voucher__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.c-voucher__row span {
+  color: var(--color-text-muted);
+}
+
+.c-voucher__row b {
+  color: var(--color-text-main);
+  text-align: right;
+}
+
+.c-voucher__total {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.15rem;
+}
+
+.c-voucher__total b {
+  color: var(--color-brand-primary);
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   10. MODAL (c-modal)
+   ========================================================================== */
+.c-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.c-modal-overlay.is-visible {
+  display: flex;
+}
+
+.c-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: modalPop 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.c-modal__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.c-modal__body {
+  padding: 1.5rem;
+}
+
+.c-modal__footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   11. TOAST (c-toast)
+   ========================================================================== */
+.c-toast {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: var(--z-toast);
+  background: var(--color-text-main);
+  color: var(--color-bg);
+  padding: 0.85rem 1.35rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  display: none;
+  max-width: 380px;
+}
+
+/* ==========================================================================
+   12. ACORDEÓN
+   ========================================================================== */
+.c-accordion {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.c-accordion__btn {
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.88rem;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-main);
+}
+
+.c-accordion__content {
+  display: none;
+  padding: 1rem 1.15rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   13. AUDITORÍA Y SMOKE TESTS
+   ========================================================================== */
+.c-smoke-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.c-smoke-card {
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+}
+
+.c-smoke-card b {
+  font-size: 1.5rem;
+  display: block;
+  color: var(--color-brand-primary);
+}
+
+/* ===== responsive.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — RESPONSIVIDAD Y BREAKPOINTS (CSS Media Queries)
+ * Adaptación para Celular vertical, Celular horizontal, Tablet y Desktop
+ */
+
+/* ==========================================================================
+   1. TABLET Y ESCRITORIO (>= 768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+  /* Ocultar barra de navegación inferior en tablet y PC */
+  .c-bottom-nav {
+    display: none;
+  }
+
+  /* Ocultar botón de menú hamburguesa móvil */
+  .c-menu-toggle {
+    display: none;
+  }
+
+  /* Mostrar navegación superior en header */
+  .c-nav-desktop {
+    display: flex;
+  }
+
+  /* Menú desplegable móvil nunca se muestra en desktop */
+  .c-mobile-drawer {
+    display: none !important;
+  }
+
+  /* Ajustar padding inferior del contenedor principal */
+  .c-app-container {
+    padding-bottom: 2.5rem;
+  }
+
+  /* Grilla de Deportes: 3 columnas */
+  .c-grid-sports {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Grilla de Canchas: 2 columnas */
+  .c-grid-courts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Distribución de Reserva: 2 Columnas amplias */
+  .c-booking-layout {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: start;
+  }
+
+  /* Formulario en 2 columnas */
+  .c-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .c-field.full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ==========================================================================
+   2. ESCRITORIO AMPLIO (>= 1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .c-grid-courts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .c-hero {
+    padding: 3rem 2.5rem;
+  }
+
+  .c-hero__title {
+    font-size: 2.85rem;
+  }
+
+  .c-panel {
+    padding: 2rem;
+  }
+}
+
+/* ==========================================================================
+   3. CELULAR HORIZONTAL / LANDSCAPE (max-height <= 540px)
+   ========================================================================== */
+@media (orientation: landscape) and (max-height: 540px) {
+  .c-header__topline {
+    display: none;
+  }
+
+  .c-header__navbar {
+    padding: 0.4rem 1rem;
+  }
+
+  .c-hero {
+    padding: 1.25rem 1.5rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .c-hero__title {
+    font-size: 1.6rem;
+  }
+
+  .c-hero__description {
+    font-size: 0.88rem;
+  }
+
+  .c-grid-sports {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .c-sport-card {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .c-sport-card__symbol {
+    font-size: 2rem;
+  }
+
+  .c-booking-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .c-promo-banner {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .c-bottom-nav {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .c-bottom-nav__item {
+    font-size: 0.65rem;
+  }
+
+  .c-bottom-nav__icon {
+    font-size: 1.05rem;
+  }
+}
+
+/* ==========================================================================
+   4. PANTALLAS EXTRA PEQUEÑAS (<= 390px)
+   ========================================================================== */
+@media (max-width: 390px) {
+  .c-header__navbar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .c-brand__mark {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  .c-brand__title {
+    font-size: 1.1rem;
+  }
+
+  .c-time-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .c-promo-banner__clock {
+    width: 100%;
+  }
+}
+
+/* ===== accessibility.css (orden original conservado) ===== */
+/**
+ * CANCHAPLUS — ACCESIBILIDAD WEB (WCAG 2.1 AA / AAA)
+ */
+
+/* Utilidad para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Foco Visible Estricto */
+*:focus-visible {
+  outline: 3px solid #22c55e !important;
+  outline-offset: 3px !important;
+}
+
+/* Estilos de Regiones aria-live */
+[aria-live] {
+  position: relative;
+}
+
+/* Reducción de Movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reglas Adicionales para Modo de Alto Contraste */
+body.high-contrast .c-btn {
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast .c-slot {
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast .c-slot--available {
+  background: #003311 !important;
+  color: #00ff66 !important;
+}
+
+body.high-contrast .c-slot--occupied {
+  background: #330000 !important;
+  color: #ff5555 !important;
+}
+
+body.high-contrast .c-field__input {
+  border: 2px solid #ffffff !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+}

@@ -64,8 +64,6 @@ function verifyToken(token) {
 }
 
 function registerUser({ nombre, apellido, telefono, correo, password, rol = 'cliente', ip = '127.0.0.1' }) {
-  // Seguridad: el registro público nunca puede crear administradores.
-  rol = 'cliente';
   const vName = validateName(`${nombre} ${apellido}`);
   if (!vName.valid) throw new Error(vName.error);
   

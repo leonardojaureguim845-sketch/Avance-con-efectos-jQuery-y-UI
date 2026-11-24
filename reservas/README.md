@@ -72,66 +72,49 @@ El proyecto está diseñado bajo una estricta separación de responsabilidades:
 
 ## 📂 Estructura de Archivos
 
-```
+```text
 reservas/
-├── index.html                   # Documento HTML5 responsivo único
-├── manifest.json                # Manifiesto PWA oficial
-├── service-worker.js            # Service Worker con caché de shell estático
-├── README.md                    # Manual integral de instalación y operación
-├── .gitignore                   # Exclusión de node_modules, .env y temporales
-├── .env.example                 # Plantilla de variables de entorno
-│
-├── css/                         # Hojas de estilos modulares con BEM
-│   ├── variables.css            # Paleta 60-30-10, temas y métricas
-│   ├── base.css                 # Reset moderno y tipografía
-│   ├── layout.css               # Header, contenedores, grillas y navegación
-│   ├── components.css           # Tarjetas, botones, horarios, modales, toast
-│   ├── responsive.css           # Media queries (móvil, horizontal, tablet, desktop)
-│   └── accessibility.css        # Foco visible, contraste WCAG y screen readers
-│
-├── js/                          # Lógica frontend estructurada en submódulos
-│   ├── app.js                   # Coordinador principal SPA y PWA
-│   ├── api.js                   # Cliente HTTP REST configurable
-│   ├── auth.js                  # Control de sesiones y usuario admin
-│   ├── courts.js                # Renderizado dinámico de deportes y canchas
-│   ├── reservations.js          # Calendario, disponibilidad real y validación
-│   ├── components.js            # Modales, toast, simulador y acordeón
-│   ├── accessibility.js         # Modo noche, alto contraste y auditoría A11y
-│   └── smoke-test.js            # Verificador de integridad en navegador
-│
 ├── assets/
-│   ├── images/                  # Gráficos vectoriales SVG de canchas y deportes
-│   └── icons/                   # Iconos PWA 192x192 y 512x512
-│
-├── vendor/                      # Dependencias cliente locales
-│   ├── jquery-3.7.1.min.js      # jQuery oficial minificado
-│   └── purify.min.js            # DOMPurify para sanitización XSS
-│
-└── backend/                     # Servidor Node.js y Base de Datos Relacional
-    ├── package.json             # Manifiesto de scripts de Node.js
-    ├── .env.example             # Configuración del servidor
-    ├── seeds/
-    │   └── init.js              # Script de inicialización y seeds maestros
-    ├── tests/
-    │   └── api.test.js          # Suite de pruebas automatizadas (node --test)
-    └── src/
-        ├── server.js            # Servidor HTTP y punto de entrada
-        ├── app.js               # Enrutador REST, CORS y servidor estático
-        ├── config/index.js      # Lectura de variables de entorno
-        ├── database/
-        │   ├── connection.js    # Conexión SQLite con WAL y transacciones
-        │   └── schema.js        # DDL completo con claves foráneas e índices
-        ├── services/            # Servicios de negocio (Auth, Canchas, Reservas, Auditoría)
-        ├── controllers/         # Handlers de petición y respuesta JSON
-        ├── middleware/          # Autenticación JWT y control de roles
-        └── validators/          # Validadores de teléfono Bolivia, fechas y nombres
+│   ├── icons/
+│   └── images/
+├── backend/
+│   ├── .env.example
+│   ├── package.json
+│   ├── seeds/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── database/
+│   │   ├── middleware/
+│   │   ├── services/
+│   │   └── validators/
+│   └── tests/
+├── css/
+│   └── styles.css
+├── js/
+│   └── app.js
+├── json/
+│   └── manifest.json
+├── vendor/
+│   ├── jquery-3.7.1.min.js
+│   └── purify.min.js
+├── semanas/
+│   ├── semana1/
+│   ├── semana2/
+│   └── semana3/
+├── index.html
+├── sw.js
+├── .gitignore
+└── README.md
 ```
+
+**Organización:** el frontend carga una hoja CSS propia (`css/styles.css`) y un bundle JavaScript propio (`js/app.js`). Las bibliotecas externas permanecen en `vendor/`. El backend conserva sus módulos separados porque controladores, servicios, middleware, validadores y configuración tienen responsabilidades y dependencias distintas. Las carpetas semanales documentan los avances y enlazan a la implementación central, evitando copias de código que luego se desactualicen.
 
 ---
 
 ## ⚙️ Requisitos Previos
 
-- **Node.js**: Versión 22.3 o superior (requerido por `node:sqlite` nativo; probado en Node.js v24).
+- **Node.js**: Versión 18 o superior (probado y optimizado en Node.js v24 con `node:sqlite` nativo).
 - **Navegador Web Moderno**: Chrome, Brave, Edge, Opera o Firefox.
 
 ---
@@ -293,64 +276,57 @@ En la pestaña **"Actividad"**, pulsa el botón **"🚀 Ejecutar Smoke Tests"** 
 
 ---
 
-## 📴 Offline First
-
-CanchaPlus incluye soporte Offline First:
-- **IndexedDB** (`js/offline.js`) almacena deportes, canchas, disponibilidad, reservas y solicitudes pendientes.
-- La app abre y navega sin Internet después de la primera carga.
-- Las reservas completadas sin conexión se guardan como **pendientes** y se sincronizan automáticamente al recuperar Internet.
-- Un badge en la cabecera muestra el estado de conexión.
-
-### Cómo probar offline
-1. Abre la app con Internet y navega por deportes/canchas.
-2. Desactiva Internet (DevTools → Network → Offline o modo avión).
-3. Recarga: la app abre y muestra datos en caché.
-4. Completa una reserva: se guarda como pendiente.
-5. Reactiva Internet: la reserva se sincroniza y se confirma si el horario sigue libre.
-
-### Limitaciones
-- Las reservas nunca se confirman sin validación del servidor.
-- Los datos offline son una caché de lo previamente consultado.
-
----
-
-## 🗄️ Supabase (opcional)
-
-Se incluyen scripts en `supabase/`:
-- `schema.sql`: tablas, relaciones, índices y trigger de perfil.
-- `rls.sql`: políticas Row Level Security.
-- `seed.sql`: datos iniciales.
-- `README.md`: instrucciones de configuración.
-
-La app usa por defecto el backend Node/SQLite. Para migrar a Supabase, sigue `supabase/README.md`.
-
----
-
-## 🚀 Preparación para GitHub y despliegue
-
-### Independencia
-- El proyecto es autocontenido en `reservas/`.
-- No depende de archivos externos ni rutas absolutas.
-- `.env.example` documenta todas las variables.
-
-### GitHub Pages (frontend estático)
-1. Sube el repositorio a GitHub.
-2. Settings → Pages → Source: `main` / `/ (root)`.
-3. La app quedará en: `https://<usuario>.github.io/<repo>/reservas/`.
-4. Configura la URL del backend con “⚙️ Conexión API”.
-
-### Backend / Supabase
-- Node/SQLite: ejecuta `backend/src/server.js` (requiere Node ≥ 22.3).
-- Supabase: sigue `supabase/README.md` para crear tablas, RLS y datos iniciales.
-
-### Verificación antes de publicar
-- [ ] Sin errores 404 en consola.
-- [ ] CSS/JS/imágenes cargan.
-- [ ] Service Worker se registra.
-- [ ] Modo claro/oscuro y alto contraste funcionan.
-- [ ] Smoke Tests ejecutados.
-- [ ] Sin secretos en el repositorio.
-
----
-
 **CanchaPlus · Universidad Privada Domingo Savio — Sede La Paz · 2026**
+
+
+---
+
+## Organización actualizada del proyecto
+
+```text
+reservas/
+├── assets/
+│   ├── icons/
+│   └── images/
+├── backend/                 # Backend Node.js + SQLite (se conserva modular)
+├── css/
+│   └── styles.css           # CSS unificado, orden original de cascada
+├── js/
+│   └── app.js               # Bundle único del JavaScript propio del frontend
+├── json/
+│   └── manifest.json
+├── vendor/                  # jQuery y DOMPurify (dependencias externas)
+├── semanas/
+│   ├── semana1/
+│   ├── semana2/
+│   └── semana3/
+├── index.html
+└── sw.js
+```
+
+### Importante sobre la arquitectura
+- El frontend carga una sola hoja CSS y un solo bundle JavaScript propio.
+- jQuery y DOMPurify se conservan en `vendor/` porque son bibliotecas externas requeridas.
+- El backend permanece modular dentro de `backend/`; no se fusionan sus archivos porque Node.js utiliza sus dependencias internas y rutas `require`.
+- Las carpetas de `semanas/` documentan cada hito y apuntan a la implementación real centralizada, evitando copias divergentes.
+- El Service Worker precarga las rutas nuevas y deja las peticiones `/api/` fuera de caché.
+
+
+## ⚙️ Configuración local del backend
+
+1. Abre una terminal dentro de `backend/`.
+2. Copia `backend/.env.example` como `backend/.env`.
+3. Cambia `JWT_SECRET` y `ADMIN_PASSWORD` por valores privados antes de usarlo fuera de desarrollo.
+4. Instala dependencias con `npm install`.
+5. Inicializa la base de datos si corresponde con `npm run init-db`.
+6. Inicia el servidor con `npm run dev` o `npm start`.
+7. Ejecuta las pruebas con `npm test`.
+
+No subas `backend/.env` a GitHub. El archivo `backend/.env.example` es solo una plantilla y sí debe versionarse.
+
+## 🌐 Publicación en GitHub
+
+- Sube el contenido de la carpeta `reservas/` al repositorio.
+- GitHub Pages puede publicar el frontend estático, pero no ejecuta el backend Node.js ni SQLite.
+- Para reservas reales y autenticación, despliega `backend/` en un servicio compatible con Node.js y configura las variables de entorno allí.
+- Actualiza la URL base de la API del frontend según el dominio del backend desplegado.
